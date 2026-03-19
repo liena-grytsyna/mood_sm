@@ -1,0 +1,49 @@
+@import '../styles/variables.scss';
+@import '../styles/forms.scss';
+
+.post-page {
+  max-width: 600px;
+  margin: 30px auto;
+  padding: $spacing-lg;
+
+  h1 {
+    margin-top: 0;
+  }
+
+  .post-error {
+    @extend .error-message;
+  }
+
+  .post-success {
+    @extend .success-message;
+  }
+
+  form {
+    .form-group {
+      margin-bottom: $spacing-lg;
+
+      label {
+        display: block;
+      }
+
+      textarea {
+        width: 100%;
+        padding: $spacing-sm;
+        margin-top: $spacing-sm;
+        font-family: $font-family;
+        font-size: $font-size-base;
+        border-radius: $border-radius;
+        border: 1px solid $border-color;
+        resize: vertical;
+      }
+    }
+
+    .character-count {
+      @extend .character-count;
+    }
+
+    button {
+      @extend .form-button;
+    }
+  }
+}

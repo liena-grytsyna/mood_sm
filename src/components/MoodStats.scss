@@ -1,0 +1,17 @@
+@import '../styles/variables.scss';
+
+.mood-stats {
+  background-color: #f9f9f9;
+  padding: $spacing-lg;
+  border-radius: $border-radius;
+  border: 1px solid $border-color;
+
+  p {
+    margin: $spacing-md 0;
+    font-size: $font-size-base;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

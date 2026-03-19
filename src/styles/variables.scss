@@ -1,0 +1,62 @@
+// Modern Gradient Colors
+$primary-gradient: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+$secondary-gradient: linear-gradient(135deg, #6366f1 0%, #818cf8 100%);
+$accent-gradient: linear-gradient(135deg, #8b5cf6 0%, #c4b5fd 100%);
+$dark-gradient: linear-gradient(135deg, #2d1b69 0%, #4c1d95 100%);
+$light-gradient: linear-gradient(135deg, #f3e8ff 0%, #f5f3ff 100%);
+
+// Base Colors
+$primary-color: #7c3aed;
+$secondary-color: #6366f1;
+$accent-color: #8b5cf6;
+$success-color: #10b981;
+$error-color: #ef4444;
+$warning-color: #f59e0b;
+
+// Neutral Colors
+$bg-primary: #ffffff;
+$bg-secondary: #f8f6ff;
+$bg-tertiary: #f3e8ff;
+$text-primary: #1f2937;
+$text-secondary: #6b7280;
+$text-muted: #9ca3af;
+$border-color: #e5e7eb;
+$border-light: #f3e8ff;
+
+// Spacing
+$spacing-xs: 8px;
+$spacing-sm: 12px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+$spacing-2xl: 48px;
+
+// Sizes
+$border-radius: 12px;
+$border-radius-lg: 16px;
+$border-radius-xl: 20px;
+$max-container-width: 900px;
+$form-max-width: 450px;
+$input-height: 44px;
+
+// Shadows
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+$shadow-glow: 0 8px 16px -2px rgba(124, 58, 237, 0.2);
+
+// Typography
+$font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+$font-weight-light: 300;
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+$font-size-xs: 12px;
+$font-size-sm: 13px;
+$font-size-base: 14px;
+$font-size-lg: 16px;
+$font-size-xl: 18px;
+$font-size-2xl: 24px;
+$font-size-3xl: 32px;

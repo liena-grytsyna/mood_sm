@@ -1,0 +1,22 @@
+@import '../styles/variables.scss';
+@import '../styles/containers.scss';
+
+.profile-page {
+  @extend .page-container;
+
+  .profile-error {
+    @extend .error-container;
+  }
+
+  .stats-section {
+    @extend .section;
+  }
+
+  .my-posts-section {
+    @extend .section;
+  }
+
+  .no-posts {
+    @extend .empty-state;
+  }
+}

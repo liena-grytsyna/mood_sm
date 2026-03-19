@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import PostCard from '../components/PostCard';
 import { api } from '../lib/api';
 import { getActorId } from '../lib/user';
+import './HomePage.scss';
 
 function HomePage() {
   const [posts, setPosts] = useState([]);
@@ -29,9 +30,9 @@ function HomePage() {
       setError('');
       const actorId = getActorId();
 
-      await api.post(`/posts/${postId}/reactions`, { emoji, actorId });
-      const response = await api.get('/posts');
-      setPosts(response.data.posts || []);
+      const response = await api.post(`/posts/${postId}/reactions`, { emoji, actorId });
+      // Optimized: Update local state instead of refetching all posts
+      setPosts(posts.map(post => post.id === postId ? response.data.post : post));
     } catch (err) {
       setError(err?.response?.data?.error || 'Reaction error');
     }
@@ -40,15 +41,15 @@ function HomePage() {
   if (loading) return <p>Loading feed...</p>;
 
   return (
-    <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
+    <div className="home-page">
       <h1>Feed - All Posts</h1>
 
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p className="feed-error">{error}</p>}
 
-      <section>
+      <section className="posts-section">
         <h2>All posts ({posts.length})</h2>
         {posts.length === 0 ? (
-          <p>No posts yet</p>
+          <p className="no-posts">No posts yet</p>
         ) : (
           posts.map((post) => (
             <PostCard key={post.id} post={post} onReact={reactToPost} />

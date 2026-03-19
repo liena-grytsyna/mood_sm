@@ -4,21 +4,22 @@ import ProfilePage from './pages/ProfilePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import PostPage from './pages/PostPage';
+import './styles/navigation.scss';
 
 function App() {
   return (
     <Router>
-      <nav style={{ padding: '10px', borderBottom: '1px solid #ccc', marginBottom: '20px' }}>
-        <Link to="/" style={{ marginRight: '20px' }}>
+      <nav>
+        <Link to="/">
           Home
         </Link>
-        <Link to="/profile" style={{ marginRight: '20px' }}>
+        <Link to="/profile">
           Profile
         </Link>
-        <Link to="/post" style={{ marginRight: '20px' }}>
+        <Link to="/post">
           New Post
         </Link>
-        <Link to="/login" style={{ marginRight: '20px' }}>
+        <Link to="/login">
           Login
         </Link>
         <Link to="/register">Register</Link>

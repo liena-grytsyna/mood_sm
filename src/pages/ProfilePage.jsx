@@ -3,6 +3,7 @@ import MoodStats from '../components/MoodStats';
 import PostCard from '../components/PostCard';
 import { api } from '../lib/api';
 import { getActorId, getAuthorName } from '../lib/user';
+import './ProfilePage.scss';
 
 function ProfilePage() {
   const [stats, setStats] = useState(null);
@@ -50,20 +51,20 @@ function ProfilePage() {
   if (loading) return <p>Loading...</p>;
 
   return (
-    <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
+    <div className="profile-page">
       <h1>My Profile</h1>
 
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p className="profile-error">{error}</p>}
 
-      <section style={{ marginBottom: '30px' }}>
+      <section className="stats-section">
         <h2>Statistics</h2>
         {stats ? <MoodStats stats={stats} /> : <p>No data</p>}
       </section>
 
-      <section>
+      <section className="my-posts-section">
         <h2>My posts ({posts.length})</h2>
         {posts.length === 0 ? (
-          <p>No posts yet</p>
+          <p className="no-posts">No posts yet</p>
         ) : (
           posts.map((post) => (
             <PostCard key={post.id} post={post} onReact={reactToPost} />

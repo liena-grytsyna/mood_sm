@@ -1,0 +1,67 @@
+@import '../styles/variables.scss';
+
+.post-card {
+  background: $bg-primary;
+  border: 1px solid $border-light;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-md;
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: $shadow-lg;
+    transform: translateY(-2px);
+  }
+
+  h3 {
+    margin: 0 0 $spacing-md 0;
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $text-primary;
+  }
+
+  p {
+    margin: $spacing-sm 0;
+    color: $text-primary;
+    line-height: 1.6;
+
+    small {
+      display: block;
+      color: $text-secondary;
+      font-size: $font-size-sm;
+      margin-top: $spacing-md;
+      padding-top: $spacing-md;
+      border-top: 1px solid $border-light;
+    }
+  }
+
+  .post-actions {
+    display: flex;
+    gap: $spacing-sm;
+    margin-top: $spacing-md;
+  }
+
+  .reaction-button {
+    flex: 1;
+    padding: $spacing-sm $spacing-md;
+    border: 1px solid $border-color;
+    border-radius: $border-radius;
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.05), rgba(167, 139, 250, 0.05));
+    color: $text-primary;
+    cursor: pointer;
+    font-size: $font-size-base;
+    font-weight: $font-weight-medium;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: $primary-gradient;
+      color: white;
+      transform: scale(1.05);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+}

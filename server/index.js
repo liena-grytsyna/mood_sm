@@ -1,3 +1,4 @@
+// Simple Express server for the Mood API
 import 'dotenv/config';
 import cors from 'cors';
 import express from 'express';
@@ -10,13 +11,6 @@ const PORT = Number(process.env.PORT || 4000);
 
 app.use(cors());
 app.use(express.json());
-
-app.get('/api/health', (_req, res) => {
-  res.json({
-    status: 'ok',
-    timestamp: new Date().toISOString(),
-  });
-});
 
 app.get('/api/posts', (req, res) => {
   const mood = req.query.mood;
@@ -73,11 +67,6 @@ app.post('/api/posts/:postId/reactions', (req, res) => {
 
   if (result.error === 'not-found') {
     res.status(404).json({ error: 'Post not found.' });
-    return;
-  }
-
-  if (result.error === 'actor-required') {
-    res.status(400).json({ error: 'actorId is required.' });
     return;
   }
 

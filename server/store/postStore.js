@@ -1,48 +1,56 @@
 const posts = [];
 
 function computeStats(items) {
-  const total = items.length;
-  const buckets = {
-    happy: 0,
-    sad: 0,
-    angry: 0,
-    calm: 0,
-    excited: 0,
-    anxious: 0,
-    neutral: 0,
-  };
+  if (!items.length) {
+    return {
+      totalPosts: 0,
+      dominantMood: 'neutral',
+      averageIntensity: 0,
+      distribution: [
+        { mood: 'happy', count: 0, percentage: 0 },
+        { mood: 'sad', count: 0, percentage: 0 },
+        { mood: 'angry', count: 0, percentage: 0 },
+        { mood: 'calm', count: 0, percentage: 0 },
+        { mood: 'excited', count: 0, percentage: 0 },
+        { mood: 'anxious', count: 0, percentage: 0 },
+        { mood: 'neutral', count: 0, percentage: 0 },
+      ],
+    };
+  }
 
+  const buckets = {};
   let intensitySum = 0;
 
+  // Single pass through items
   for (const post of items) {
-    if (buckets[post.mood] === undefined) {
-      buckets.neutral += 1;
-    } else {
-      buckets[post.mood] += 1;
-    }
+    const mood = post.mood || 'neutral';
+    buckets[mood] = (buckets[mood] || 0) + 1;
     intensitySum += Number(post.intensity || 0);
   }
 
-  let dominantMood = 'neutral';
-  let dominantValue = -1;
+  // Ensure all moods exist in buckets
+  const moodList = ['happy', 'sad', 'angry', 'calm', 'excited', 'anxious', 'neutral'];
+  moodList.forEach(mood => {
+    if (!(mood in buckets)) buckets[mood] = 0;
+  });
 
-  for (const [mood, count] of Object.entries(buckets)) {
-    if (count > dominantValue) {
-      dominantMood = mood;
-      dominantValue = count;
-    }
-  }
+  // Find dominant mood
+  const [dominantMood] = Object.entries(buckets).reduce(
+    ([mood, count], [currentMood, currentCount]) => 
+      currentCount > count ? [currentMood, currentCount] : [mood, count],
+    ['neutral', 0]
+  );
 
-  const distribution = Object.entries(buckets).map(([mood, count]) => ({
+  const distribution = moodList.map(mood => ({
     mood,
-    count,
-    percentage: total ? Number(((count / total) * 100).toFixed(1)) : 0,
+    count: buckets[mood],
+    percentage: Number(((buckets[mood] / items.length) * 100).toFixed(1)),
   }));
 
   return {
-    totalPosts: total,
+    totalPosts: items.length,
     dominantMood,
-    averageIntensity: total ? Number((intensitySum / total).toFixed(2)) : 0,
+    averageIntensity: Number((intensitySum / items.length).toFixed(2)),
     distribution,
   };
 }
@@ -77,22 +85,20 @@ export const postStore = {
   react(postId, emoji, actorId) {
     const post = posts.find((item) => item.id === postId);
     if (!post) return { error: 'not-found' };
-
-    if (!actorId) {
-      return { error: 'actor-required' };
-    }
+    if (!actorId) return { error: 'actor-required' };
 
     const alreadyReacted = post.reactedUsers.includes(actorId);
 
     if (alreadyReacted) {
+      // Remove reaction: filter user out and decrement count (min 0)
       post.reactedUsers = post.reactedUsers.filter((id) => id !== actorId);
-      post.reactions[emoji] = Math.max((post.reactions[emoji] || 1) - 1, 0);
+      post.reactions[emoji] = Math.max(0, (post.reactions[emoji] || 0) - 1);
       return { post, liked: false };
     }
 
+    // Add reaction: increment count and add user
     post.reactions[emoji] = (post.reactions[emoji] || 0) + 1;
     post.reactedUsers.push(actorId);
-
     return { post, liked: true };
   },
 

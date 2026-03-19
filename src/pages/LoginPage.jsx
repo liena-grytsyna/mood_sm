@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { saveUser } from '../lib/user';
+import './LoginPage.scss';
 
 function LoginPage() {
   const [email, setEmail] = useState('');
@@ -22,33 +23,31 @@ function LoginPage() {
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '50px auto', padding: '20px' }}>
+    <div className="login-container">
       <h1>Login</h1>
 
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p className="error-message">{error}</p>}
 
       <form onSubmit={handleLogin}>
-        <div style={{ marginBottom: '15px' }}>
+        <div className="form-group">
           <label>Email</label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            style={{ width: '100%', padding: '8px', marginTop: '5px' }}
           />
         </div>
 
-        <div style={{ marginBottom: '15px' }}>
+        <div className="form-group">
           <label>Password</label>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            style={{ width: '100%', padding: '8px', marginTop: '5px' }}
           />
         </div>
 
-        <button type="submit" style={{ width: '100%', padding: '10px', cursor: 'pointer' }}>
+        <button type="submit" className="form-button">
           Sign in
         </button>
       </form>

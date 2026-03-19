@@ -1,0 +1,18 @@
+@import '../styles/variables.scss';
+@import '../styles/containers.scss';
+
+.home-page {
+  @extend .page-container;
+
+  .feed-error {
+    @extend .error-container;
+  }
+
+  .posts-section {
+    @extend .section;
+  }
+
+  .no-posts {
+    @extend .empty-state;
+  }
+}

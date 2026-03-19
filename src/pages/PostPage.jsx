@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../lib/api';
 import { getAuthorName } from '../lib/user';
+import './PostPage.scss';
 
 function PostPage() {
   const [text, setText] = useState('');
@@ -45,14 +46,14 @@ function PostPage() {
   };
 
   return (
-    <div style={{ maxWidth: '600px', margin: '30px auto', padding: '20px' }}>
+    <div className="post-page">
       <h1>Create a New Post</h1>
 
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {success && <p style={{ color: 'green' }}>{success}</p>}
+      {error && <p className="post-error">{error}</p>}
+      {success && <p className="post-success">{success}</p>}
 
       <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '20px' }}>
+        <div className="form-group">
           <label>What is your vibe right now?</label>
           <textarea
             value={text}
@@ -60,18 +61,8 @@ function PostPage() {
             placeholder="Share your mood..."
             maxLength={280}
             rows={6}
-            style={{
-              width: '100%',
-              padding: '10px',
-              marginTop: '10px',
-              fontFamily: 'Arial',
-              fontSize: '14px',
-              borderRadius: '5px',
-              border: '1px solid #ccc',
-              resize: 'vertical',
-            }}
           />
-          <p style={{ color: '#666', fontSize: '12px' }}>
+          <p className="character-count">
             {text.length}/280
           </p>
         </div>
@@ -79,18 +70,7 @@ function PostPage() {
         <button
           type="submit"
           disabled={loading}
-          style={{
-            width: '100%',
-            padding: '12px',
-            cursor: loading ? 'not-allowed' : 'pointer',
-            opacity: loading ? 0.6 : 1,
-            backgroundColor: '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            fontSize: '16px',
-            fontWeight: 'bold',
-          }}
+          className="form-button"
         >
           {loading ? 'Publishing...' : 'Publish Post'}
         </button>

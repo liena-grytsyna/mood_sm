@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { saveUser } from '../lib/user';
+import './RegisterPage.scss';
 
 function RegisterPage() {
   const [email, setEmail] = useState('');
@@ -33,53 +34,49 @@ function RegisterPage() {
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '50px auto', padding: '20px' }}>
+    <div className="register-container">
       <h1>Register</h1>
 
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p className="error-message">{error}</p>}
 
       <form onSubmit={handleRegister}>
-        <div style={{ marginBottom: '15px' }}>
+        <div className="form-group">
           <label>Username</label>
           <input
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            style={{ width: '100%', padding: '8px', marginTop: '5px' }}
           />
         </div>
 
-        <div style={{ marginBottom: '15px' }}>
+        <div className="form-group">
           <label>Email</label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            style={{ width: '100%', padding: '8px', marginTop: '5px' }}
           />
         </div>
 
-        <div style={{ marginBottom: '15px' }}>
+        <div className="form-group">
           <label>Password</label>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            style={{ width: '100%', padding: '8px', marginTop: '5px' }}
           />
         </div>
 
-        <div style={{ marginBottom: '15px' }}>
+        <div className="form-group">
           <label>Confirm Password</label>
           <input
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            style={{ width: '100%', padding: '8px', marginTop: '5px' }}
           />
         </div>
 
-        <button type="submit" style={{ width: '100%', padding: '10px', cursor: 'pointer' }}>
+        <button type="submit" className="form-button">
           Create Account
         </button>
       </form>
