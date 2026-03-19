@@ -1,7 +1,7 @@
-@import './styles/variables.scss';
-@import './styles/forms.scss';
-@import './styles/containers.scss';
-@import './styles/navigation.scss';
+@use './styles/variables.scss' as *;
+@use './styles/forms.scss' as *;
+@use './styles/containers.scss' as *;
+@use './styles/navigation.scss' as *;
 
 * {
   margin: 0;
@@ -22,6 +22,7 @@ body {
   line-height: 1.6;
   color: $text-primary;
   background: $light-gradient;
+  background-attachment: fixed;
 }
 
 #root {
@@ -37,6 +38,7 @@ h5,
 h6 {
   margin-bottom: $spacing-md;
   font-weight: $font-weight-semibold;
+  color: $text-primary;
 }
 
 a {
@@ -62,4 +64,8 @@ textarea {
 
 p {
   color: $text-secondary;
+}
+
+::selection {
+  background: rgba(232, 111, 66, 0.18);
 }

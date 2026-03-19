@@ -1,17 +1,34 @@
-@import '../styles/variables.scss';
+@use '../styles/variables.scss' as *;
+@use '../styles/containers.scss' as *;
 
 .mood-stats {
-  background-color: #f9f9f9;
-  padding: $spacing-lg;
-  border-radius: $border-radius;
-  border: 1px solid $border-color;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: $spacing-md;
 
-  p {
-    margin: $spacing-md 0;
-    font-size: $font-size-base;
+  .mood-stat {
+    @extend .card;
+    margin-bottom: 0;
+    padding: $spacing-md $spacing-lg;
+  }
 
-    &:last-child {
-      margin-bottom: 0;
-    }
+  .mood-stat__label {
+    margin-bottom: $spacing-xs;
+    color: $text-secondary;
+    font-size: $font-size-sm;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .mood-stat__value {
+    color: $secondary-color;
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-bold;
+    font-family: $font-family-display;
+    line-height: 1.1;
+  }
+
+  @media (max-width: 720px) {
+    grid-template-columns: 1fr;
   }
 }

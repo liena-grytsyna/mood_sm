@@ -1,5 +1,5 @@
-@import '../styles/variables.scss';
-@import '../styles/containers.scss';
+@use '../styles/variables.scss' as *;
+@use '../styles/containers.scss' as *;
 
 .profile-page {
   @extend .page-container;

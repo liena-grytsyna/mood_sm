@@ -32,7 +32,9 @@ function HomePage() {
 
       const response = await api.post(`/posts/${postId}/reactions`, { emoji, actorId });
       // Optimized: Update local state instead of refetching all posts
-      setPosts(posts.map(post => post.id === postId ? response.data.post : post));
+      setPosts((currentPosts) => currentPosts.map(
+        (post) => (post.id === postId ? response.data.post : post),
+      ));
     } catch (err) {
       setError(err?.response?.data?.error || 'Reaction error');
     }
@@ -42,7 +44,9 @@ function HomePage() {
 
   return (
     <div className="home-page">
-      <h1>Feed - All Posts</h1>
+      <header className="page-hero">
+        <h1>Community mood board</h1>
+      </header>
 
       {error && <p className="feed-error">{error}</p>}
 

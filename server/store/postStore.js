@@ -1,4 +1,164 @@
+import { db, sqliteEnabled } from '../db.js';
+import { createId, normalizeText, parseStoredJson, sortByNewest } from './storeUtils.js';
+
 const posts = [];
+const moods = ['happy', 'sad', 'angry', 'calm', 'excited', 'anxious', 'neutral'];
+const moodSet = new Set(moods);
+const POST_FIELDS = 'id, author, text, mood, intensity, reactions, reacted_users, created_at';
+
+function normalizeMood(value) {
+  return moodSet.has(value) ? value : 'neutral';
+}
+
+function normalizeIntensity(value) {
+  const numeric = Number(value);
+
+  if (Number.isNaN(numeric)) {
+    return 0.5;
+  }
+
+  return Math.max(0, Math.min(1, numeric));
+}
+
+function mapRowToPost(row) {
+  if (!row) {
+    return null;
+  }
+
+  return {
+    id: row.id,
+    author: row.author,
+    text: row.text,
+    mood: normalizeMood(row.mood),
+    intensity: normalizeIntensity(row.intensity),
+    reactions: parseStoredJson(row.reactions, {}),
+    reactedUsers: parseStoredJson(row.reacted_users, []),
+    createdAt: row.created_at,
+  };
+}
+
+function createPostRecord({ author, text, mood, intensity }) {
+  return {
+    id: createId('p'),
+    author: normalizeText(author) || 'Anonymous',
+    text: normalizeText(text),
+    mood: normalizeMood(mood),
+    intensity: normalizeIntensity(intensity),
+    reactions: {},
+    reactedUsers: [],
+    createdAt: new Date().toISOString(),
+  };
+}
+
+function buildPostQuery({ mood, author, newestFirst = false } = {}) {
+  const clauses = [];
+  const params = [];
+
+  if (mood && mood !== 'all') {
+    clauses.push('mood = ?');
+    params.push(mood);
+  }
+
+  if (author) {
+    clauses.push('author = ?');
+    params.push(author);
+  }
+
+  return {
+    params,
+    whereClause: clauses.length ? `WHERE ${clauses.join(' AND ')}` : '',
+    orderClause: newestFirst ? 'ORDER BY created_at DESC' : '',
+  };
+}
+
+function getPosts(options = {}) {
+  if (sqliteEnabled) {
+    const { whereClause, orderClause, params } = buildPostQuery(options);
+    const rows = db.prepare(`
+      SELECT ${POST_FIELDS}
+      FROM posts
+      ${whereClause}
+      ${orderClause}
+    `).all(...params);
+
+    return rows.map(mapRowToPost);
+  }
+
+  const filtered = posts.filter((post) => {
+    const moodMatches = !options.mood || options.mood === 'all' || post.mood === options.mood;
+    const authorMatches = !options.author || post.author === options.author;
+    return moodMatches && authorMatches;
+  });
+
+  return options.newestFirst ? sortByNewest(filtered, 'createdAt') : filtered;
+}
+
+function getPostById(postId) {
+  if (sqliteEnabled) {
+    const row = db.prepare(`
+      SELECT ${POST_FIELDS}
+      FROM posts
+      WHERE id = ?
+    `).get(postId);
+
+    return mapRowToPost(row);
+  }
+
+  return posts.find((post) => post.id === postId) || null;
+}
+
+function savePost(post) {
+  if (sqliteEnabled) {
+    db.prepare(`
+      INSERT INTO posts (id, author, text, mood, intensity, reactions, reacted_users, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(
+      post.id,
+      post.author,
+      post.text,
+      post.mood,
+      post.intensity,
+      JSON.stringify(post.reactions),
+      JSON.stringify(post.reactedUsers),
+      post.createdAt,
+    );
+
+    return post;
+  }
+
+  posts.push(post);
+  return post;
+}
+
+function savePostReactionState(post) {
+  if (!sqliteEnabled) {
+    return;
+  }
+
+  db.prepare(`
+    UPDATE posts
+    SET reactions = ?, reacted_users = ?
+    WHERE id = ?
+  `).run(
+    JSON.stringify(post.reactions),
+    JSON.stringify(post.reactedUsers),
+    post.id,
+  );
+}
+
+function toggleReaction(post, emoji, actorId) {
+  const alreadyReacted = post.reactedUsers.includes(actorId);
+
+  if (alreadyReacted) {
+    post.reactedUsers = post.reactedUsers.filter((id) => id !== actorId);
+    post.reactions[emoji] = Math.max(0, (post.reactions[emoji] || 0) - 1);
+    return false;
+  }
+
+  post.reactions[emoji] = (post.reactions[emoji] || 0) + 1;
+  post.reactedUsers.push(actorId);
+  return true;
+}
 
 function computeStats(items) {
   if (!items.length) {
@@ -6,103 +166,70 @@ function computeStats(items) {
       totalPosts: 0,
       dominantMood: 'neutral',
       averageIntensity: 0,
-      distribution: [
-        { mood: 'happy', count: 0, percentage: 0 },
-        { mood: 'sad', count: 0, percentage: 0 },
-        { mood: 'angry', count: 0, percentage: 0 },
-        { mood: 'calm', count: 0, percentage: 0 },
-        { mood: 'excited', count: 0, percentage: 0 },
-        { mood: 'anxious', count: 0, percentage: 0 },
-        { mood: 'neutral', count: 0, percentage: 0 },
-      ],
+      distribution: moods.map((mood) => ({ mood, count: 0, percentage: 0 })),
     };
   }
 
-  const buckets = {};
+  const counts = Object.fromEntries(moods.map((mood) => [mood, 0]));
   let intensitySum = 0;
 
-  // Single pass through items
   for (const post of items) {
-    const mood = post.mood || 'neutral';
-    buckets[mood] = (buckets[mood] || 0) + 1;
+    const mood = normalizeMood(post.mood);
+    counts[mood] += 1;
     intensitySum += Number(post.intensity || 0);
   }
 
-  // Ensure all moods exist in buckets
-  const moodList = ['happy', 'sad', 'angry', 'calm', 'excited', 'anxious', 'neutral'];
-  moodList.forEach(mood => {
-    if (!(mood in buckets)) buckets[mood] = 0;
-  });
+  let dominantMood = 'neutral';
 
-  // Find dominant mood
-  const [dominantMood] = Object.entries(buckets).reduce(
-    ([mood, count], [currentMood, currentCount]) => 
-      currentCount > count ? [currentMood, currentCount] : [mood, count],
-    ['neutral', 0]
-  );
-
-  const distribution = moodList.map(mood => ({
-    mood,
-    count: buckets[mood],
-    percentage: Number(((buckets[mood] / items.length) * 100).toFixed(1)),
-  }));
+  for (const mood of moods) {
+    if (counts[mood] > counts[dominantMood]) {
+      dominantMood = mood;
+    }
+  }
 
   return {
     totalPosts: items.length,
     dominantMood,
     averageIntensity: Number((intensitySum / items.length).toFixed(2)),
-    distribution,
+    distribution: moods.map((mood) => ({
+      mood,
+      count: counts[mood],
+      percentage: Number(((counts[mood] / items.length) * 100).toFixed(1)),
+    })),
   };
 }
 
 export const postStore = {
   list(filterMood, filterAuthor) {
-    const sorted = [...posts].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-    return sorted.filter((post) => {
-      const moodMatches = !filterMood || filterMood === 'all' || post.mood === filterMood;
-      const authorMatches = !filterAuthor || post.author === filterAuthor;
-      return moodMatches && authorMatches;
+    return getPosts({
+      mood: filterMood,
+      author: filterAuthor,
+      newestFirst: true,
     });
   },
 
   add({ author, text, mood, intensity }) {
-    const post = {
-      id: `p${Date.now().toString(36)}`,
-      author: author?.trim() || 'Anonymous',
-      text: text.trim(),
-      mood: mood || 'neutral',
-      intensity: intensity || 0.5,
-      reactions: {},
-      reactedUsers: [],
-      createdAt: new Date().toISOString(),
-    };
-
-    posts.push(post);
-    return post;
+    const post = createPostRecord({ author, text, mood, intensity });
+    return savePost(post);
   },
 
   react(postId, emoji, actorId) {
-    const post = posts.find((item) => item.id === postId);
-    if (!post) return { error: 'not-found' };
-    if (!actorId) return { error: 'actor-required' };
-
-    const alreadyReacted = post.reactedUsers.includes(actorId);
-
-    if (alreadyReacted) {
-      // Remove reaction: filter user out and decrement count (min 0)
-      post.reactedUsers = post.reactedUsers.filter((id) => id !== actorId);
-      post.reactions[emoji] = Math.max(0, (post.reactions[emoji] || 0) - 1);
-      return { post, liked: false };
+    if (!actorId) {
+      return { error: 'actor-required' };
     }
 
-    // Add reaction: increment count and add user
-    post.reactions[emoji] = (post.reactions[emoji] || 0) + 1;
-    post.reactedUsers.push(actorId);
-    return { post, liked: true };
+    const post = getPostById(postId);
+    if (!post) {
+      return { error: 'not-found' };
+    }
+
+    const liked = toggleReaction(post, emoji, actorId);
+    savePostReactionState(post);
+
+    return { post, liked };
   },
 
-  stats() {
-    return computeStats(posts);
+  stats(filterAuthor) {
+    return computeStats(getPosts({ author: filterAuthor }));
   },
 };

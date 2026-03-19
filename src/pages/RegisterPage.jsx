@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { api } from '../lib/api';
 import { saveUser } from '../lib/user';
 import './RegisterPage.scss';
 
@@ -9,9 +10,10 @@ function RegisterPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [username, setUsername] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
 
     if (!email || !password || !confirmPassword || !username) {
@@ -29,8 +31,18 @@ function RegisterPage() {
       return;
     }
 
-    saveUser({ email, username });
-    navigate('/profile');
+    try {
+      setLoading(true);
+      setError('');
+
+      const response = await api.post('/register', { email, username, password });
+      saveUser(response.data.user);
+      navigate('/profile');
+    } catch (err) {
+      setError(err?.response?.data?.error || 'Registration failed');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -76,8 +88,8 @@ function RegisterPage() {
           />
         </div>
 
-        <button type="submit" className="form-button">
-          Create Account
+        <button type="submit" className="form-button" disabled={loading}>
+          {loading ? 'Creating...' : 'Create Account'}
         </button>
       </form>
     </div>

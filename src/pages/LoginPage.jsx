@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { api } from '../lib/api';
 import { saveUser } from '../lib/user';
 import './LoginPage.scss';
 
@@ -7,9 +8,10 @@ function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
     if (!email || !password) {
@@ -17,9 +19,18 @@ function LoginPage() {
       return;
     }
 
-    const username = email.split('@')[0] || 'Anonymous';
-    saveUser({ email, username });
-    navigate('/profile');
+    try {
+      setLoading(true);
+      setError('');
+
+      const response = await api.post('/login', { email, password });
+      saveUser(response.data.user);
+      navigate('/profile');
+    } catch (err) {
+      setError(err?.response?.data?.error || 'Login failed');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -47,8 +58,8 @@ function LoginPage() {
           />
         </div>
 
-        <button type="submit" className="form-button">
-          Sign in
+        <button type="submit" className="form-button" disabled={loading}>
+          {loading ? 'Signing in...' : 'Sign in'}
         </button>
       </form>
     </div>

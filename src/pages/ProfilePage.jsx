@@ -19,7 +19,7 @@ function ProfilePage() {
 
         const [postsRes, statsRes] = await Promise.all([
           api.get('/posts', { params: { author: currentUsername } }),
-          api.get('/profile/stats'),
+          api.get('/profile/stats', { params: { author: currentUsername } }),
         ]);
 
         setPosts(postsRes.data.posts || []);
@@ -52,7 +52,10 @@ function ProfilePage() {
 
   return (
     <div className="profile-page">
-      <h1>My Profile</h1>
+      <header className="page-hero">
+        <h1>My profile</h1>
+        <p>Track your posting habits, see your dominant mood, and revisit the updates you have shared with everyone else.</p>
+      </header>
 
       {error && <p className="profile-error">{error}</p>}
 

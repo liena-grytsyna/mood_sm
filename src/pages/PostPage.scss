@@ -1,13 +1,14 @@
-@import '../styles/variables.scss';
-@import '../styles/forms.scss';
+@use '../styles/variables.scss' as *;
+@use '../styles/forms.scss' as *;
+@use '../styles/containers.scss' as *;
 
 .post-page {
-  max-width: 600px;
-  margin: 30px auto;
-  padding: $spacing-lg;
+  @extend .page-container;
+  max-width: $content-width-narrow;
 
-  h1 {
-    margin-top: 0;
+  .post-composer {
+    @extend .form-container;
+    max-width: none;
   }
 
   .post-error {
@@ -16,34 +17,5 @@
 
   .post-success {
     @extend .success-message;
-  }
-
-  form {
-    .form-group {
-      margin-bottom: $spacing-lg;
-
-      label {
-        display: block;
-      }
-
-      textarea {
-        width: 100%;
-        padding: $spacing-sm;
-        margin-top: $spacing-sm;
-        font-family: $font-family;
-        font-size: $font-size-base;
-        border-radius: $border-radius;
-        border: 1px solid $border-color;
-        resize: vertical;
-      }
-    }
-
-    .character-count {
-      @extend .character-count;
-    }
-
-    button {
-      @extend .form-button;
-    }
   }
 }

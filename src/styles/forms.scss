@@ -1,13 +1,25 @@
-@import './variables.scss';
+@use './variables.scss' as *;
 
 .form-container {
   max-width: $form-max-width;
-  margin: $spacing-2xl auto;
+  margin: 0 auto;
   padding: $spacing-lg;
-  background: $bg-primary;
+  background: $surface-tint;
+  backdrop-filter: blur(14px);
   border-radius: $border-radius-lg;
   box-shadow: $shadow-xl;
-  border: 1px solid $border-light;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+
+  h1 {
+    font-family: $font-family-display;
+    font-size: $font-size-2xl;
+    letter-spacing: -0.03em;
+    margin-bottom: $spacing-sm;
+  }
+
+  p {
+    margin-bottom: $spacing-lg;
+  }
 }
 
 .form-group {
@@ -20,7 +32,7 @@
     color: $text-primary;
     font-size: $font-size-sm;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.08em;
   }
 
   input,
@@ -28,18 +40,22 @@
     width: 100%;
     padding: $spacing-md;
     font-family: $font-family;
-    border: 1px solid $border-color;
+    border: 1px solid rgba(124, 58, 237, 0.12);
     border-radius: $border-radius;
     font-size: $font-size-base;
-    background: $bg-secondary;
+    line-height: 1.5;
+    background: rgba(255, 255, 255, 0.85);
     color: $text-primary;
-    transition: all 0.3s ease;
+    transition:
+      border-color $transition-base,
+      box-shadow $transition-base,
+      background-color $transition-base;
 
     &:focus {
       outline: none;
       background: $bg-primary;
       border-color: $primary-color;
-      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+      box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.12);
     }
 
     &[type='email'],
@@ -56,7 +72,7 @@
   textarea {
     font-size: $font-size-base;
     resize: vertical;
-    min-height: 120px;
+    min-height: 140px;
   }
 }
 
@@ -70,10 +86,13 @@
   cursor: pointer;
   font-size: $font-size-lg;
   font-weight: $font-weight-semibold;
-  transition: all 0.3s ease;
+  transition:
+    transform $transition-base,
+    box-shadow $transition-base,
+    opacity $transition-base;
   box-shadow: $shadow-lg;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.08em;
 
   &:hover {
     transform: translateY(-2px);
@@ -96,13 +115,19 @@
 
 .error-message {
   color: $error-color;
+  font-weight: $font-weight-medium;
+  margin-bottom: $spacing-md;
 }
 
 .success-message {
   color: $success-color;
+  font-weight: $font-weight-medium;
+  margin-bottom: $spacing-md;
 }
 
 .character-count {
   color: $text-secondary;
   font-size: $font-size-sm;
+  text-align: right;
+  margin-top: $spacing-sm;
 }

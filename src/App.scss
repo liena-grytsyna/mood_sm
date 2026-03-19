@@ -1,7 +1,7 @@
-@import './styles/variables.scss';
-@import './styles/navigation.scss';
-@import './styles/containers.scss';
-@import './styles/forms.scss';
+@use './styles/variables.scss' as *;
+@use './styles/navigation.scss' as *;
+@use './styles/containers.scss' as *;
+@use './styles/forms.scss' as *;
 
 * {
   margin: 0;
@@ -14,6 +14,7 @@ body {
   background: $light-gradient;
   color: $text-primary;
   line-height: 1.6;
+  background-attachment: fixed;
 }
 
 html,

@@ -1,34 +1,112 @@
-@import './variables.scss';
+@use './variables.scss' as *;
 
 nav {
-  background: $bg-primary;
-  border-bottom: 1px solid $border-light;
-  padding: $spacing-md $spacing-lg;
-  margin-bottom: $spacing-lg;
-  box-shadow: $shadow-sm;
-  position: sticky;
-  top: 0;
+  position: fixed;
+  top: $spacing-md;
+  left: 50%;
   z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-md;
+  width: min(calc(100% - 32px), 1120px);
+  padding: $spacing-sm;
+  transform: translateX(-50%);
+  background: rgba(252, 251, 255, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 999px;
+  box-shadow: $shadow-lg;
+  backdrop-filter: blur(18px);
+
+  .nav-brand {
+    padding: 0 $spacing-md;
+    color: $secondary-color;
+    font-family: $font-family-display;
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    letter-spacing: -0.03em;
+    white-space: nowrap;
+  }
+
+  .nav-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: $spacing-xs;
+    width: 100%;
+  }
 
   a {
-    display: inline-block;
-    margin-right: $spacing-lg;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     text-decoration: none;
     color: $text-secondary;
     font-weight: $font-weight-medium;
     font-size: $font-size-base;
-    padding: $spacing-sm $spacing-md;
-    border-radius: $border-radius;
-    transition: all 0.3s ease;
+    padding: 10px 18px;
+    border-radius: 999px;
+    transition:
+      background-color $transition-base,
+      color $transition-base,
+      transform $transition-base;
 
     &:hover {
-      color: $primary-color;
-      background: $bg-secondary;
+      color: $secondary-color;
+      background: rgba(124, 58, 237, 0.08);
+      transform: translateY(-1px);
     }
 
-    &.active {
-      color: $primary-color;
-      background: $light-gradient;
+    &.nav-link-active {
+      color: $bg-primary;
+      background: $secondary-gradient;
+      box-shadow: $shadow-sm;
+    }
+  }
+
+  .nav-logout {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 18px;
+    border-radius: 999px;
+    background: rgba(124, 58, 237, 0.1);
+    color: $primary-color-dark;
+    font-size: $font-size-base;
+    font-weight: $font-weight-semibold;
+    transition:
+      background-color $transition-base,
+      color $transition-base,
+      transform $transition-base;
+
+    &:hover {
+      background: rgba(124, 58, 237, 0.18);
+      transform: translateY(-1px);
+    }
+  }
+
+  @media (max-width: 720px) {
+    top: $spacing-sm;
+    width: min(calc(100% - 20px), 1120px);
+    border-radius: 28px;
+    padding: $spacing-md;
+
+    .nav-brand {
+      width: 100%;
+      padding: 0;
+      text-align: center;
+    }
+
+    .nav-links {
+      justify-content: center;
+    }
+
+    a {
+      flex: 1 1 calc(50% - #{$spacing-xs});
+    }
+
+    .nav-logout {
+      flex: 1 1 calc(50% - #{$spacing-xs});
     }
   }
 }

@@ -1,58 +1,68 @@
-@import './variables.scss';
+@use './variables.scss' as *;
 
 .page-container {
   min-height: 100vh;
   background: $light-gradient;
-  padding: $spacing-xl;
+  padding: calc($nav-height + $spacing-lg) $spacing-lg $spacing-3xl;
   max-width: $max-container-width;
   margin: 0 auto;
+  position: relative;
+
+  @media (max-width: 720px) {
+    padding: calc($nav-height + $spacing-md) $spacing-md $spacing-2xl;
+  }
 }
 
 .card {
-  background: $bg-primary;
+  background: $surface-tint;
+  backdrop-filter: blur(14px);
   border-radius: $border-radius-lg;
   box-shadow: $shadow-lg;
   padding: $spacing-lg;
   margin-bottom: $spacing-lg;
-  border: 1px solid $border-light;
-  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  transition:
+    transform $transition-base,
+    box-shadow $transition-base,
+    border-color $transition-base;
 
   &:hover {
     box-shadow: $shadow-xl;
-    transform: translateY(-4px);
+    border-color: rgba(124, 58, 237, 0.28);
+    transform: translateY(-3px);
   }
 }
 
 .error-container {
   margin-bottom: $spacing-md;
   padding: $spacing-md;
-  background: #fee2e2;
+  background: rgba(194, 65, 49, 0.1);
   border-left: 4px solid $error-color;
   border-radius: $border-radius;
-  color: #991b1b;
+  color: $error-color;
   font-weight: $font-weight-medium;
 }
 
 .success-container {
   margin-bottom: $spacing-md;
   padding: $spacing-md;
-  background: #ecfdf5;
+  background: rgba(18, 128, 92, 0.1);
   border-left: 4px solid $success-color;
   border-radius: $border-radius;
-  color: #065f46;
+  color: $success-color;
   font-weight: $font-weight-medium;
 }
 
 .section {
+  @extend .card;
   margin-bottom: $spacing-xl;
 
   h1 {
     font-size: $font-size-3xl;
     font-weight: $font-weight-bold;
-    background: $primary-gradient;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    font-family: $font-family-display;
+    letter-spacing: -0.03em;
+    color: $secondary-color;
     margin-bottom: $spacing-lg;
   }
 
@@ -61,6 +71,7 @@
     font-weight: $font-weight-semibold;
     color: $text-primary;
     margin-bottom: $spacing-md;
+    letter-spacing: -0.02em;
   }
 }
 
@@ -69,4 +80,20 @@
   padding: $spacing-2xl $spacing-lg;
   color: $text-secondary;
   font-size: $font-size-lg;
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px dashed rgba(124, 58, 237, 0.16);
+  border-radius: $border-radius-lg;
+}
+
+.page-hero {
+  margin-bottom: $spacing-xl;
+
+  h1 {
+    margin-bottom: $spacing-sm;
+  }
+
+  p {
+    max-width: $content-width-narrow;
+    font-size: $font-size-lg;
+  }
 }

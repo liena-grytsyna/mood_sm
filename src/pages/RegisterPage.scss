@@ -1,8 +1,10 @@
-@import '../styles/variables.scss';
-@import '../styles/forms.scss';
+@use '../styles/variables.scss' as *;
+@use '../styles/forms.scss' as *;
+@use '../styles/containers.scss' as *;
 
 .register-container {
   @extend .form-container;
+  margin-top: calc($nav-height + $spacing-2xl);
 
   h1 {
     margin-top: 0;
@@ -15,16 +17,6 @@
   form {
     .form-group {
       margin-bottom: $spacing-md;
-
-      label {
-        display: block;
-      }
-
-      input {
-        width: 100%;
-        padding: $spacing-xs;
-        margin-top: $spacing-xs;
-      }
     }
 
     button {
