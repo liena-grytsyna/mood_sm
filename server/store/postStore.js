@@ -1,15 +1,18 @@
 import { db, sqliteEnabled } from '../db.js';
 import { createId, normalizeText, parseStoredJson, sortByNewest } from './storeUtils.js';
 
+// In-memory store for posts (used if SQLite is not enabled)
 const posts = [];
 const moods = ['happy', 'sad', 'angry', 'calm', 'excited', 'anxious', 'neutral'];
 const moodSet = new Set(moods);
 const POST_FIELDS = 'id, author, text, mood, intensity, reactions, reacted_users, created_at';
 
+// Helper functions for normalizing and mapping data
 function normalizeMood(value) {
   return moodSet.has(value) ? value : 'neutral';
 }
 
+// Clamp intensity to [0, 1], treating non-numeric values as 0.5
 function normalizeIntensity(value) {
   const numeric = Number(value);
 
@@ -20,6 +23,7 @@ function normalizeIntensity(value) {
   return Math.max(0, Math.min(1, numeric));
 }
 
+// Map a database row to a post object, with normalization and JSON parsing
 function mapRowToPost(row) {
   if (!row) {
     return null;
@@ -37,6 +41,7 @@ function mapRowToPost(row) {
   };
 }
 
+//
 function createPostRecord({ author, text, mood, intensity }) {
   return {
     id: createId('p'),

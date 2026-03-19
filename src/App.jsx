@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, NavLink, Navigate } from 'react-router-dom';
-import HomePage from './pages/HomePage';
-import ProfilePage from './pages/ProfilePage';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import PostPage from './pages/PostPage';
+import HomePage from './pages/HomePage/HomePage';
+import ProfilePage from './pages/ProfilePage/ProfilePage';
+import LoginPage from './pages/LoginPage/LoginPage';
+import RegisterPage from './pages/RegisterPage/RegisterPage';
+import PostPage from './pages/PostPage/PostPage';
 import { clearUser, getCurrentUser, subscribeToUserChanges } from './lib/user';
 import './styles/navigation.scss';
 

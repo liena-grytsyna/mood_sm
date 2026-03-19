@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { api } from '../lib/api';
-import { getAuthorName } from '../lib/user';
+import { api } from '../../lib/api';
+import { getAuthorName } from '../../lib/user';
 import './PostPage.scss';
 
 function PostPage() {

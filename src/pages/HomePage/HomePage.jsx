@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import PostCard from '../components/PostCard';
-import { api } from '../lib/api';
-import { getActorId } from '../lib/user';
+import PostCard from '../../components/PostCard/PostCard';
+import { api } from '../../lib/api';
+import { getActorId } from '../../lib/user';
 import './HomePage.scss';
 
 function HomePage() {

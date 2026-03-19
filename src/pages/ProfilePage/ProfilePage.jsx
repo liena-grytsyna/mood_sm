@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import MoodStats from '../components/MoodStats';
-import PostCard from '../components/PostCard';
-import { api } from '../lib/api';
-import { getActorId, getAuthorName } from '../lib/user';
+import MoodStats from '../../components/MoodStats/MoodStats';
+import PostCard from '../../components/PostCard/PostCard';
+import { api } from '../../lib/api';
+import { getActorId, getAuthorName } from '../../lib/user';
 import './ProfilePage.scss';
 
 function ProfilePage() {
