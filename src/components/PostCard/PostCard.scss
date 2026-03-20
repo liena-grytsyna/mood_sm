@@ -2,7 +2,36 @@
 @use '../../styles/containers.scss' as *;
 
 .post-card {
-  @extend .card;
+ @extend .card;
+  transition: box-shadow $transition-base, transform $transition-base;
+
+  &[data-mood='happy'] {
+    box-shadow: 0 18px 38px -24px rgba(39, 255, 10, 0.856);
+  }
+
+  &[data-mood='sad'] {
+    box-shadow: 0 18px 38px -24px rgba(2, 48, 255, 0.877);
+  }
+
+  &[data-mood='angry'] {
+    box-shadow: 0 18px 38px -24px rgba(255, 0, 0, 0.952);
+  }
+
+  &[data-mood='calm'] {
+    box-shadow: 0 18px 38px -24px rgba(8, 255, 234, 0.788);
+  }
+
+  &[data-mood='excited'] {
+    box-shadow: 0 18px 38px -24px rgba(233, 250, 1, 0.822);
+  }
+
+  &[data-mood='anxious'] {
+    box-shadow: 0 18px 38px -24px rgba(124, 4, 172, 0.788);
+  }
+
+  &[data-mood='neutral'] {
+    box-shadow: 0 18px 38px -24px rgba(202, 219, 255, 0.28);
+  }
 
   .post-card__header {
     display: flex;

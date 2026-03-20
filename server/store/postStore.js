@@ -41,7 +41,7 @@ function mapRowToPost(row) {
   };
 }
 
-//
+// Create a new post record with normalized fields and default values
 function createPostRecord({ author, text, mood, intensity }) {
   return {
     id: createId('p'),
@@ -55,6 +55,7 @@ function createPostRecord({ author, text, mood, intensity }) {
   };
 }
 
+// Build SQL query components based on filter options for mood and author
 function buildPostQuery({ mood, author, newestFirst = false } = {}) {
   const clauses = [];
   const params = [];
@@ -76,6 +77,7 @@ function buildPostQuery({ mood, author, newestFirst = false } = {}) {
   };
 }
 
+// Retrieve posts from the database or in-memory store based on filter options
 function getPosts(options = {}) {
   if (sqliteEnabled) {
     const { whereClause, orderClause, params } = buildPostQuery(options);
@@ -98,6 +100,7 @@ function getPosts(options = {}) {
   return options.newestFirst ? sortByNewest(filtered, 'createdAt') : filtered;
 }
 
+// Retrieve a single post by ID from the database or in-memory store
 function getPostById(postId) {
   if (sqliteEnabled) {
     const row = db.prepare(`
@@ -112,6 +115,7 @@ function getPostById(postId) {
   return posts.find((post) => post.id === postId) || null;
 }
 
+// Save a new post to the database or in-memory store, returning the saved post
 function savePost(post) {
   if (sqliteEnabled) {
     db.prepare(`
@@ -135,6 +139,7 @@ function savePost(post) {
   return post;
 }
 
+// Update the reactions and reacted users for a post in the database
 function savePostReactionState(post) {
   if (!sqliteEnabled) {
     return;
@@ -151,6 +156,7 @@ function savePostReactionState(post) {
   );
 }
 
+// Toggle a reaction for a post by a specific user, returning whether the reaction was added or removed
 function toggleReaction(post, emoji, actorId) {
   const alreadyReacted = post.reactedUsers.includes(actorId);
 
@@ -165,6 +171,7 @@ function toggleReaction(post, emoji, actorId) {
   return true;
 }
 
+// Compute statistics about posts, including total count, dominant mood, average intensity, and mood distribution
 function computeStats(items) {
   if (!items.length) {
     return {

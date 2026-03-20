@@ -4,7 +4,7 @@ function PostCard({ post, onReact }) {
   const likesCount = post.reactions?.['👍'] || 0;
 
   return (
-    <article className="post-card">
+    <article className="post-card"  data-mood={post.mood || 'neutral'}>
       <div className="post-card__header">
         <h3>{post.author}</h3>
         <span className="post-card__meta">{likesCount} likes</span>
