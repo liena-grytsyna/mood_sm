@@ -46,52 +46,60 @@ function RegisterPage() {
   };
 
   return (
-    <div className="register-container">
-      <h1>Register</h1>
+    <div className="register-page">
+      <section className="register-page__card form-card">
+        <span className="form-card__kicker">Start Here</span>
+        <h1 className="form-card__title">Create account</h1>
+        <p className="form-card__text">Set up your profile to post, react, and build a simple visual archive of how your days are actually feeling.</p>
 
-      {error && <p className="error-message">{error}</p>}
+        {error && <p className="form-card__status form-card__status--error">{error}</p>}
 
-      <form onSubmit={handleRegister}>
-        <div className="form-group">
-          <label>Username</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </div>
+        <form className="form-card__form" onSubmit={handleRegister}>
+          <div className="form-card__field">
+            <label className="form-card__label">Username</label>
+            <input
+              className="form-card__control"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
 
-        <div className="form-group">
-          <label>Email</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
+          <div className="form-card__field">
+            <label className="form-card__label">Email</label>
+            <input
+              className="form-card__control"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
 
-        <div className="form-group">
-          <label>Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
+          <div className="form-card__field">
+            <label className="form-card__label">Password</label>
+            <input
+              className="form-card__control"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
 
-        <div className="form-group">
-          <label>Confirm Password</label>
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-        </div>
+          <div className="form-card__field">
+            <label className="form-card__label">Confirm Password</label>
+            <input
+              className="form-card__control"
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+          </div>
 
-        <button type="submit" className="form-button" disabled={loading}>
-          {loading ? 'Creating...' : 'Create Account'}
-        </button>
-      </form>
+          <button type="submit" className="form-card__submit" disabled={loading}>
+            {loading ? 'Creating...' : 'Create Account'}
+          </button>
+        </form>
+      </section>
     </div>
   );
 }

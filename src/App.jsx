@@ -6,7 +6,6 @@ import LoginPage from './pages/LoginPage/LoginPage';
 import RegisterPage from './pages/RegisterPage/RegisterPage';
 import PostPage from './pages/PostPage/PostPage';
 import { clearUser, getCurrentUser, subscribeToUserChanges } from './lib/user';
-import './styles/navigation.scss';
 
 function ProtectedRoute({ children, authed }) {
   if (!authed) {
@@ -33,29 +32,47 @@ function App() {
 
   return (
     <Router>
-      <nav>
-        <div className="nav-links">
-          <NavLink to="/" className={({ isActive }) => (isActive ? 'nav-link-active' : undefined)}>
+      <nav className="site-nav">
+        <NavLink to="/" className="site-nav__brand">
+          Mood Space
+        </NavLink>
+        <div className="site-nav__links">
+          <NavLink
+            to="/"
+            className={({ isActive }) => `site-nav__link${isActive ? ' site-nav__link--active' : ''}`}
+          >
             Home
           </NavLink>
           {authed ? (
             <>
-              <NavLink to="/profile" className={({ isActive }) => (isActive ? 'nav-link-active' : undefined)}>
+              <NavLink
+                to="/profile"
+                className={({ isActive }) => `site-nav__link${isActive ? ' site-nav__link--active' : ''}`}
+              >
                 Profile
               </NavLink>
-              <NavLink to="/post" className={({ isActive }) => (isActive ? 'nav-link-active' : undefined)}>
+              <NavLink
+                to="/post"
+                className={({ isActive }) => `site-nav__link${isActive ? ' site-nav__link--active' : ''}`}
+              >
                 New Post
               </NavLink>
-              <button type="button" className="nav-logout" onClick={clearUser}>
+              <button type="button" className="site-nav__logout" onClick={clearUser}>
                 Logout
               </button>
             </>
           ) : (
             <>
-              <NavLink to="/login" className={({ isActive }) => (isActive ? 'nav-link-active' : undefined)}>
+              <NavLink
+                to="/login"
+                className={({ isActive }) => `site-nav__link${isActive ? ' site-nav__link--active' : ''}`}
+              >
                 Login
               </NavLink>
-              <NavLink to="/register" className={({ isActive }) => (isActive ? 'nav-link-active' : undefined)}>
+              <NavLink
+                to="/register"
+                className={({ isActive }) => `site-nav__link${isActive ? ' site-nav__link--active' : ''}`}
+              >
                 Register
               </NavLink>
             </>

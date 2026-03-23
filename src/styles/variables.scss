@@ -1,31 +1,29 @@
-// Purple palette
-$primary-gradient: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
-$secondary-gradient: linear-gradient(135deg, #4c1d95 0%, #6d28d9 100%);
-$accent-gradient: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
-$dark-gradient: linear-gradient(135deg, #2e1065 0%, #4c1d95 100%);
-$light-gradient:
-  radial-gradient(circle at top, rgba(168, 85, 247, 0.18), transparent 34%),
-  linear-gradient(180deg, #faf5ff 0%, #f5f3ff 48%, #ede9fe 100%);
+// Dawn palette
+$primary-gradient: linear-gradient(135deg, #ef7c53 0%, #f4b85c 100%);
+$secondary-gradient: linear-gradient(135deg, #17304a 0%, #2c5978 100%);
+$accent-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.94) 0%, rgba(255, 241, 228, 0.8) 100%);
+$dark-gradient: linear-gradient(135deg, #0f2335 0%, #1f4560 100%);
+$light-gradient: linear-gradient(180deg, #fffaf4 0%, #f6f1ea 55%, #eef4f8 100%);
 
 // Base colors
-$primary-color: #7c3aed;
-$primary-color-dark: #5b21b6;
-$secondary-color: #4c1d95;
-$accent-color: #a855f7;
-$success-color: #12805c;
-$error-color: #c24131;
-$warning-color: #b7791f;
+$primary-color: #ef7c53;
+$primary-color-dark: #c45f39;
+$secondary-color: #17304a;
+$accent-color: #f4b85c;
+$success-color: #1f8a6d;
+$error-color: #c24733;
+$warning-color: #c28a2b;
 
 // Neutral colors
-$bg-primary: #fcfbff;
-$bg-secondary: #f5f3ff;
-$bg-tertiary: #ede9fe;
-$surface-tint: rgba(255, 255, 255, 0.72);
-$text-primary: #221b35;
-$text-secondary: #645f79;
-$text-muted: #8b84a3;
-$border-color: #ddd6fe;
-$border-light: #ede9fe;
+$bg-primary: #fffaf4;
+$bg-secondary: #f8f0e7;
+$bg-tertiary: #edf5fa;
+$surface-tint: rgba(255, 255, 255, 0.84);
+$text-primary: #1b2f3f;
+$text-secondary: #60707d;
+$text-muted: #8d99a4;
+$border-color: rgba(23, 48, 74, 0.12);
+$border-light: rgba(23, 48, 74, 0.08);
 
 // Spacing
 $spacing-xs: 8px;
@@ -37,24 +35,24 @@ $spacing-2xl: 48px;
 $spacing-3xl: 64px;
 
 // Sizes
-$border-radius: 14px;
-$border-radius-lg: 20px;
-$border-radius-xl: 28px;
+$border-radius: 18px;
+$border-radius-lg: 28px;
+$border-radius-xl: 36px;
 $max-container-width: 1040px;
 $form-max-width: 520px;
-$input-height: 52px;
-$nav-height: 84px;
+$input-height: 56px;
+$nav-height: 92px;
 
 // Shadows
-$shadow-sm: 0 10px 25px -18px rgba(24, 33, 43, 0.28);
-$shadow-md: 0 18px 38px -28px rgba(24, 33, 43, 0.34);
-$shadow-lg: 0 26px 54px -32px rgba(24, 33, 43, 0.38);
-$shadow-xl: 0 34px 72px -38px rgba(16, 32, 51, 0.45);
-$shadow-glow: 0 18px 44px -24px rgba(124, 58, 237, 0.42);
+$shadow-sm: 0 12px 24px -18px rgba(16, 33, 47, 0.22);
+$shadow-md: 0 18px 36px -26px rgba(16, 33, 47, 0.28);
+$shadow-lg: 0 26px 54px -34px rgba(16, 33, 47, 0.3);
+$shadow-xl: 0 34px 72px -40px rgba(12, 28, 42, 0.36);
+$shadow-glow: 0 22px 48px -28px rgba(239, 124, 83, 0.34);
 
 // Typography
-$font-family: 'Trebuchet MS', 'Avenir Next', 'Segoe UI', sans-serif;
-$font-family-display: Georgia, 'Times New Roman', serif;
+$font-family: 'Avenir Next', 'Trebuchet MS', 'Segoe UI', sans-serif;
+$font-family-display: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
 $font-weight-light: 300;
 $font-weight-normal: 400;
 $font-weight-medium: 500;
@@ -69,5 +67,5 @@ $font-size-2xl: 30px;
 $font-size-3xl: 44px;
 
 // Layout helpers
-$content-width-narrow: 760px;
-$transition-base: 180ms ease;
+$content-width-narrow: 820px;
+$transition-base: 220ms ease;

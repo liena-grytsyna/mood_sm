@@ -3,19 +3,8 @@
 @use '../../styles/containers.scss' as *;
 
 .post-page {
-  @extend .page-container;
+  @extend .page-layout;
+  display: grid;
+  gap: $spacing-xl;
   max-width: $content-width-narrow;
-
-  .post-composer {
-    @extend .form-container;
-    max-width: none;
-  }
-
-  .post-error {
-    @extend .error-message;
-  }
-
-  .post-success {
-    @extend .success-message;
-  }
 }

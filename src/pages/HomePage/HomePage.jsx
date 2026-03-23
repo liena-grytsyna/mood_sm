@@ -44,20 +44,24 @@ function HomePage() {
 
   return (
     <div className="home-page">
-      <header className="page-hero">
-        <h1>Community mood board</h1>
+      <header className="home-page__hero hero-card">
+        <span className="hero-card__kicker">Live Feed</span>
+        <h1 className="hero-card__title">Community mood board</h1>
+        <p className="hero-card__text">Follow the emotional weather of the room, discover how people are feeling, and react to the posts shaping today&apos;s vibe.</p>
       </header>
 
-      {error && <p className="feed-error">{error}</p>}
+      {error && <p className="home-page__feedback status-banner status-banner--error">{error}</p>}
 
-      <section className="posts-section">
-        <h2>All posts ({posts.length})</h2>
+      <section className="home-page__panel panel-card">
+        <h2 className="home-page__title">All posts ({posts.length})</h2>
         {posts.length === 0 ? (
-          <p className="no-posts">No posts yet</p>
+          <p className="home-page__empty empty-panel">No posts yet</p>
         ) : (
-          posts.map((post) => (
-            <PostCard key={post.id} post={post} onReact={reactToPost} />
-          ))
+          <div className="home-page__posts post-collection">
+            {posts.map((post) => (
+              <PostCard key={post.id} post={post} onReact={reactToPost} />
+            ))}
+          </div>
         )}
       </section>
     </div>

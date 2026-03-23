@@ -1,34 +1,38 @@
 @use './variables.scss' as *;
 
-nav {
+.site-nav {
   position: fixed;
   top: $spacing-md;
   left: 50%;
   z-index: 100;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: $spacing-md;
-  width: min(calc(100% - 32px), 1120px);
-  padding: $spacing-sm;
+  gap: $spacing-sm;
+  width: min(calc(100% - 36px), 1180px);
+  padding: 10px;
   transform: translateX(-50%);
-  background: rgba(252, 251, 255, 0.82);
-  border: 1px solid rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.84);
+  border: 1px solid var(--surface-border);
   border-radius: 999px;
-  box-shadow: $shadow-lg;
-  backdrop-filter: blur(18px);
+  box-shadow: $shadow-md;
+  backdrop-filter: blur(16px);
 
-  .nav-brand {
-    padding: 0 $spacing-md;
+  &__brand {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 176px;
+    padding: 12px 18px;
     color: $secondary-color;
     font-family: $font-family-display;
-    font-size: $font-size-xl;
+    font-size: clamp(1.1rem, 2vw, 1.45rem);
     font-weight: $font-weight-bold;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.04em;
     white-space: nowrap;
+    text-decoration: none;
   }
 
-  .nav-links {
+  &__links {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-end;
@@ -36,76 +40,80 @@ nav {
     width: 100%;
   }
 
-  a {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    color: $text-secondary;
-    font-weight: $font-weight-medium;
-    font-size: $font-size-base;
-    padding: 10px 18px;
-    border-radius: 999px;
-    transition:
-      background-color $transition-base,
-      color $transition-base,
-      transform $transition-base;
-
-    &:hover {
-      color: $secondary-color;
-      background: rgba(124, 58, 237, 0.08);
-      transform: translateY(-1px);
-    }
-
-    &.nav-link-active {
-      color: $bg-primary;
-      background: $secondary-gradient;
-      box-shadow: $shadow-sm;
-    }
-  }
-
-  .nav-logout {
+  &__link,
+  &__logout {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     padding: 10px 18px;
     border-radius: 999px;
-    background: rgba(124, 58, 237, 0.1);
-    color: $primary-color-dark;
+    background: rgba(23, 48, 74, 0.08);
+    color: $secondary-color;
     font-size: $font-size-base;
     font-weight: $font-weight-semibold;
     transition:
       background-color $transition-base,
       color $transition-base,
-      transform $transition-base;
+      transform $transition-base,
+      box-shadow $transition-base,
+      border-color $transition-base;
 
     &:hover {
-      background: rgba(124, 58, 237, 0.18);
+      background: rgba(23, 48, 74, 0.1);
+      color: $secondary-color;
+      border-color: rgba(23, 48, 74, 0.12);
       transform: translateY(-1px);
     }
   }
 
-  @media (max-width: 720px) {
+  &__link {
+    text-decoration: none;
+    color: $text-secondary;
+    font-size: $font-size-base;
+    font-weight: $font-weight-medium;
+  }
+
+  &__link--active {
+    color: #fffaf4;
+    background: $secondary-gradient;
+    box-shadow: $shadow-sm;
+
+    &:hover {
+      color: #fffaf4;
+      background: $secondary-gradient;
+      box-shadow: $shadow-sm;
+    }
+  }
+
+  &__logout {
+    border: 1px solid transparent;
+    background: rgba(23, 48, 74, 0.06);
+    color: $secondary-color;
+    font-size: $font-size-base;
+  }
+
+  @media (max-width: 840px) {
     top: $spacing-sm;
     width: min(calc(100% - 20px), 1120px);
-    border-radius: 28px;
+    border-radius: $border-radius-xl;
     padding: $spacing-md;
 
-    .nav-brand {
+    &__brand {
       width: 100%;
+      min-width: 0;
       padding: 0;
       text-align: center;
     }
 
-    .nav-links {
+    &__links {
       justify-content: center;
     }
 
-    a {
+    &__link {
       flex: 1 1 calc(50% - #{$spacing-xs});
     }
 
-    .nav-logout {
+    &__logout {
       flex: 1 1 calc(50% - #{$spacing-xs});
     }
   }

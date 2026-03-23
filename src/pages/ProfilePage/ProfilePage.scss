@@ -2,21 +2,19 @@
 @use '../../styles/containers.scss' as *;
 
 .profile-page {
-  @extend .page-container;
+  @extend .page-layout;
+  display: grid;
+  gap: $spacing-xl;
 
-  .profile-error {
-    @extend .error-container;
+  &__section {
+    display: grid;
+    gap: $spacing-lg;
   }
 
-  .stats-section {
-    @extend .section;
-  }
-
-  .my-posts-section {
-    @extend .section;
-  }
-
-  .no-posts {
-    @extend .empty-state;
+  &__title {
+    font-size: clamp(1.55rem, 2.4vw, 2rem);
+    font-weight: $font-weight-semibold;
+    color: $secondary-color;
+    letter-spacing: -0.03em;
   }
 }

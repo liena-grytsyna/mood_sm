@@ -4,31 +4,49 @@
 .mood-stats {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: $spacing-md;
+  gap: $spacing-lg;
+}
 
-  .mood-stat {
-    @extend .card;
-    margin-bottom: 0;
-    padding: $spacing-md $spacing-lg;
-  }
+.mood-stats__item {
+  @extend .panel-card;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: $spacing-lg;
+}
 
-  .mood-stat__label {
-    margin-bottom: $spacing-xs;
-    color: $text-secondary;
-    font-size: $font-size-sm;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
+.mood-stats__item--total {
+  border-top: 3px solid rgba(244, 184, 92, 0.42);
+}
 
-  .mood-stat__value {
-    color: $secondary-color;
-    font-size: $font-size-2xl;
-    font-weight: $font-weight-bold;
-    font-family: $font-family-display;
-    line-height: 1.1;
-  }
+.mood-stats__item--intensity {
+  border-top: 3px solid rgba(94, 175, 220, 0.42);
+}
 
-  @media (max-width: 720px) {
+.mood-stats__item--dominant {
+  border-top: 3px solid rgba(239, 124, 83, 0.42);
+}
+
+.mood-stats__label {
+  margin-bottom: $spacing-xs;
+  color: $text-secondary;
+  font-size: $font-size-sm;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.mood-stats__value {
+  color: $secondary-color;
+  font-size: clamp(2.1rem, 4vw, 3.2rem);
+  font-weight: $font-weight-bold;
+  font-family: $font-family-display;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+}
+
+@media (max-width: 720px) {
+  .mood-stats {
     grid-template-columns: 1fr;
   }
 }

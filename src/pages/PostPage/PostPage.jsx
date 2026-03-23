@@ -47,26 +47,28 @@ function PostPage() {
 
   return (
     <div className="post-page">
-      <header className="page-hero">
-        <h1>Write into the feed</h1>
-        <p>Share a short mood update with the community. Keep it honest, quick, and under 280 characters.</p>
+      <header className="post-page__hero hero-card">
+        <span className="hero-card__kicker">New Entry</span>
+        <h1 className="hero-card__title">Write into the feed</h1>
+        <p className="hero-card__text">Share a short mood update with the community. Keep it honest, quick, and under 280 characters.</p>
       </header>
 
-      <section className="post-composer">
-        {error && <p className="post-error">{error}</p>}
-        {success && <p className="post-success">{success}</p>}
+      <section className="post-page__composer form-card form-card--wide">
+        {error && <p className="form-card__status form-card__status--error">{error}</p>}
+        {success && <p className="form-card__status form-card__status--success">{success}</p>}
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>What is your vibe right now?</label>
+        <form className="form-card__form" onSubmit={handleSubmit}>
+          <div className="form-card__field">
+            <label className="form-card__label">What is your vibe right now?</label>
             <textarea
+              className="form-card__control form-card__control--textarea"
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder="Share your mood..."
               maxLength={280}
               rows={6}
             />
-            <p className="character-count">
+            <p className="form-card__counter">
               {text.length}/280
             </p>
           </div>
@@ -74,7 +76,7 @@ function PostPage() {
           <button
             type="submit"
             disabled={loading}
-            className="form-button"
+            className="form-card__submit"
           >
             {loading ? 'Publishing...' : 'Publish Post'}
           </button>

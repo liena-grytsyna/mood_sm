@@ -34,34 +34,40 @@ function LoginPage() {
   };
 
   return (
-    <div className="login-container">
-      <h1>Login</h1>
+    <div className="login-page">
+      <section className="login-page__card form-card">
+        <span className="form-card__kicker">Welcome Back</span>
+        <h1 className="form-card__title">Login</h1>
+        <p className="form-card__text">Step back into your space, publish fresh updates, and keep an eye on how your mood shifts over time.</p>
 
-      {error && <p className="error-message">{error}</p>}
+        {error && <p className="form-card__status form-card__status--error">{error}</p>}
 
-      <form onSubmit={handleLogin}>
-        <div className="form-group">
-          <label>Email</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
+        <form className="form-card__form" onSubmit={handleLogin}>
+          <div className="form-card__field">
+            <label className="form-card__label">Email</label>
+            <input
+              className="form-card__control"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
 
-        <div className="form-group">
-          <label>Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
+          <div className="form-card__field">
+            <label className="form-card__label">Password</label>
+            <input
+              className="form-card__control"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
 
-        <button type="submit" className="form-button" disabled={loading}>
-          {loading ? 'Signing in...' : 'Sign in'}
-        </button>
-      </form>
+          <button type="submit" className="form-card__submit" disabled={loading}>
+            {loading ? 'Signing in...' : 'Sign in'}
+          </button>
+        </form>
+      </section>
     </div>
   );
 }

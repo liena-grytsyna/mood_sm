@@ -52,26 +52,29 @@ function ProfilePage() {
 
   return (
     <div className="profile-page">
-      <header className="page-hero">
-        <h1>My profile</h1>
-        <p>Track your posting habits, see your dominant mood, and revisit the updates you have shared with everyone else.</p>
+      <header className="profile-page__hero hero-card">
+        <span className="hero-card__kicker">Personal Pulse</span>
+        <h1 className="hero-card__title">My profile</h1>
+        <p className="hero-card__text">Track your posting habits, see your dominant mood, and revisit the updates you have shared with everyone else.</p>
       </header>
 
-      {error && <p className="profile-error">{error}</p>}
+      {error && <p className="profile-page__feedback status-banner status-banner--error">{error}</p>}
 
-      <section className="stats-section">
-        <h2>Statistics</h2>
+      <section className="profile-page__section panel-card">
+        <h2 className="profile-page__title">Statistics</h2>
         {stats ? <MoodStats stats={stats} /> : <p>No data</p>}
       </section>
 
-      <section className="my-posts-section">
-        <h2>My posts ({posts.length})</h2>
+      <section className="profile-page__section panel-card">
+        <h2 className="profile-page__title">My posts ({posts.length})</h2>
         {posts.length === 0 ? (
-          <p className="no-posts">No posts yet</p>
+          <p className="profile-page__empty empty-panel">No posts yet</p>
         ) : (
-          posts.map((post) => (
-            <PostCard key={post.id} post={post} onReact={reactToPost} />
-          ))
+          <div className="profile-page__posts post-collection">
+            {posts.map((post) => (
+              <PostCard key={post.id} post={post} onReact={reactToPost} />
+            ))}
+          </div>
         )}
       </section>
     </div>

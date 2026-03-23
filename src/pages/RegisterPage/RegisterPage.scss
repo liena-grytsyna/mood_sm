@@ -2,25 +2,11 @@
 @use '../../styles/forms.scss' as *;
 @use '../../styles/containers.scss' as *;
 
-.register-container {
-  @extend .form-container;
-  margin-top: calc($nav-height + $spacing-2xl);
+.register-page {
+  @extend .page-layout;
+}
 
-  h1 {
-    margin-top: 0;
-  }
-
-  .error-message {
-    color: $error-color;
-  }
-
-  form {
-    .form-group {
-      margin-bottom: $spacing-md;
-    }
-
-    button {
-      @extend .form-button;
-    }
-  }
+.register-page__card {
+  margin-top: $spacing-xl;
+  margin-bottom: $spacing-3xl;
 }

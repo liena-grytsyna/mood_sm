@@ -3,10 +3,19 @@
 @use './styles/containers.scss' as *;
 @use './styles/forms.scss' as *;
 
+:root {
+  --surface-border: rgba(255, 255, 255, 0.74);
+  --hero-wash: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(250, 244, 236, 0.92));
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
@@ -14,7 +23,7 @@ body {
   background: $light-gradient;
   color: $text-primary;
   line-height: 1.6;
-  background-attachment: fixed;
+  min-height: 100vh;
 }
 
 html,
@@ -25,7 +34,6 @@ body,
 }
 
 #root {
-  background: $light-gradient;
   min-height: 100vh;
 }
 
@@ -35,7 +43,7 @@ a {
   transition: color 0.2s ease;
 
   &:hover {
-    color: $secondary-color;
+    color: $primary-color-dark;
   }
 }
 
@@ -51,4 +59,5 @@ h6 {
 
 p {
   color: $text-secondary;
+  line-height: 1.75;
 }
