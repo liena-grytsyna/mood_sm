@@ -1,4 +1,4 @@
-// Simple heuristic-based mood analyzer
+// mood keywords
 const moodKeywords = {
   happy: ['happy', 'joy', 'smile', 'great', 'awesome', 'good', 'fantastic', 'love', 'wonderful', 'amazing'],
   sad: ['sad', 'cry', 'lonely', 'down', 'hurt', 'depress', 'unhappy', 'miserable', 'heartbreak', 'sorrow', 'tears', 'gloom'],
@@ -8,49 +8,31 @@ const moodKeywords = {
   anxious: ['anxious', 'nervous', 'panic', 'worried', 'stress', 'fear', 'uneasy', 'tense', 'apprehensive', 'freak out', 'overthink', 'dread', 'unease'],
 };
 
-// Clamp a number between 0 and 1, treating non-numeric values as 0.5
-function clamp01(value) {
-  const numberValue = Number(value);
-  if (Number.isNaN(numberValue)) return 0.5;
-  return Math.max(0, Math.min(1, numberValue));
-}
-
-// Analyze mood using simple keyword matching and intensity estimation
+// check text for mood keywords
 function heuristicAnalyze(text) {
   const lowerText = text.toLowerCase();
   const scores = {};
-
-  // Count keyword matches for each mood
+// count keywords for each mood
   for (const [mood, keywords] of Object.entries(moodKeywords)) {
     scores[mood] = keywords.filter(keyword => lowerText.includes(keyword)).length;
   }
-
-  // Find dominant mood with tie-breaking for neutral fallback
+// find mood with highest score
   const [bestMood, bestScore] = Object.entries(scores).reduce(
     ([mood, score], [currentMood, currentScore]) => 
       currentScore > score ? [currentMood, currentScore] : [mood, score],
     ['neutral', 0]
   );
-
-  // Calculate intensity with better scaling
-  // Formula: base (0.3) + keyword density + text length factor
-  const keywordDensity = Math.min(0.35, bestScore * 0.1); // Caps at 0.45 total
-  const lengthFactor = Math.min(0.2, text.length / 500); // Text length factor (up to 0.2)
-  const intensity = bestScore === 0 ? 0.35 : clamp01(0.3 + keywordDensity + lengthFactor);
-
+// if no keywords found, return neutral
   return {
-    mood: bestMood,
-    intensity,
+    mood: bestScore === 0 ? 'neutral' : bestMood,
     source: 'heuristic',
   };
 }
-
-// Main function to analyze mood, with error handling for empty or invalid input
+// if no text provided, return neutral mood
 export async function analyzeMood(text) {
   if (!text || !text.trim()) {
     return {
       mood: 'neutral',
-      intensity: 0.2,
       source: 'empty',
     };
   }

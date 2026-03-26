@@ -4,20 +4,19 @@ import { api } from '../../lib/api';
 import { saveUser } from '../../lib/user';
 import './RegisterPage.scss';
 
-function RegisterPage() {
+function RegisterPage({ onAuth }) {
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [username, setUsername] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleRegister = async (e) => {
+  async function handleRegister(e) {
     e.preventDefault();
 
-    if (!email || !password || !confirmPassword || !username) {
-      setError('Please fill in all fields');
+    if (!username || !email || !password || !confirmPassword) {
+      setError('Fill in all fields');
       return;
     }
 
@@ -32,25 +31,27 @@ function RegisterPage() {
     }
 
     try {
-      setLoading(true);
       setError('');
 
-      const response = await api.post('/register', { email, username, password });
-      saveUser(response.data.user);
+      const res = await api.post('/register', {
+        username: username,
+        email: email,
+        password: password,
+      });
+
+      const nextUser = res.data.user;
+      saveUser(nextUser);
+      onAuth?.(nextUser);
       navigate('/profile');
     } catch (err) {
       setError(err?.response?.data?.error || 'Registration failed');
-    } finally {
-      setLoading(false);
     }
-  };
+  }
 
   return (
     <div className="register-page">
       <section className="register-page__card form-card">
-        <span className="form-card__kicker">Start Here</span>
         <h1 className="form-card__title">Create account</h1>
-        <p className="form-card__text">Set up your profile to post, react, and build a simple visual archive of how your days are actually feeling.</p>
 
         {error && <p className="form-card__status form-card__status--error">{error}</p>}
 
@@ -95,8 +96,8 @@ function RegisterPage() {
             />
           </div>
 
-          <button type="submit" className="form-card__submit" disabled={loading}>
-            {loading ? 'Creating...' : 'Create Account'}
+          <button type="submit" className="form-card__submit">
+            Create Account
           </button>
         </form>
       </section>

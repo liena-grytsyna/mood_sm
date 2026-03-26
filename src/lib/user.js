@@ -1,89 +1,92 @@
-function buildUsernameFromEmail(email) {
-  if (!email || typeof email !== 'string') return '';
-  const [raw] = email.split('@');
-  return raw?.trim() || '';
+const USER_KEY = 'user';
+const GUEST_KEY = 'guest_id';
+
+// create unique guest id
+function createGuestId() {
+  return 'guest_' + Date.now();
 }
 
-const USER_STORAGE_KEY = 'user';
-const USER_CHANGE_EVENT = 'mood-space-user-change';
-const GUEST_ACTOR_KEY = 'guest_actor_id';
+// create a new user object
+function getGuestId() {
+  // check if already exist
+  let id = localStorage.getItem(GUEST_KEY);
 
-function createGuestActorId() {
-  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
-    return `guest_${crypto.randomUUID()}`;
+  if (!id) {
+    // create new guest id
+    id = createGuestId();
+    localStorage.setItem(GUEST_KEY, id);
   }
 
-  return `guest_${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`;
+  return id;
 }
 
-function getGuestActorId() {
+// get user from local storage
+export function getUser() {
+  const data = localStorage.getItem(USER_KEY);
+
+  if (!data) {
+    return null;
+  }
+
   try {
-    const storedGuestId = localStorage.getItem(GUEST_ACTOR_KEY);
-    if (storedGuestId) return storedGuestId;
-
-    const guestId = createGuestActorId();
-    localStorage.setItem(GUEST_ACTOR_KEY, guestId);
-    return guestId;
+    return JSON.parse(data);
   } catch {
-    return createGuestActorId();
+    return null;
   }
 }
-
-export function getStoredUser() {
-  try {
-    return JSON.parse(localStorage.getItem(USER_STORAGE_KEY) || '{}');
-  } catch {
-    return {};
-  }
-}
-
+// get current user or guest info
 export function getCurrentUser() {
-  const user = getStoredUser();
-  return {
-    id: user.id || '',
-    email: user.email || '',
-    username: user.username || buildUsernameFromEmail(user.email) || '',
-    createdAt: user.createdAt || user.created_at || '',
-  };
-}
+  const user = getUser();
 
-export function isAuthenticated() {
-  const user = getCurrentUser();
-  return Boolean(user.id && user.email && user.username);
-}
-
-export function getActorId() {
-  const user = getCurrentUser();
-  if (isAuthenticated()) {
-    return user.id || user.email || user.username;
+  if (!user) {
+    return {
+      id: '',
+      username: '',
+      email: '',
+    };
   }
 
-  return getGuestActorId();
-}
-
-export function getAuthorName() {
-  if (!isAuthenticated()) return 'Anonymous';
-  return getCurrentUser().username || 'Anonymous';
+  return user;
 }
 
 export function saveUser(user) {
-  localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
-  window.dispatchEvent(new Event(USER_CHANGE_EVENT));
+  localStorage.setItem(USER_KEY, JSON.stringify(user));
+}
+
+export function logout() {
+  localStorage.removeItem(USER_KEY);
 }
 
 export function clearUser() {
-  localStorage.removeItem(USER_STORAGE_KEY);
-  window.dispatchEvent(new Event(USER_CHANGE_EVENT));
+  localStorage.removeItem(USER_KEY);
 }
 
-export function subscribeToUserChanges(callback) {
-  const handleChange = () => callback();
+export function isAuth() {
+  const user = getUser();
 
-  window.addEventListener(USER_CHANGE_EVENT, handleChange);
-  window.addEventListener('storage', handleChange);
+  if (user && user.id) {
+    return true;
+  }
 
-  return () => {
-    window.removeEventListener(USER_CHANGE_EVENT, handleChange);
-    window.removeEventListener('storage', handleChange);
-  };
+  return false;
+}
+
+export function getActorId() {
+  const user = getUser();
+
+  if (user && user.id) {
+    return user.id;
+  }
+
+  return getGuestId();
+}
+
+export function getAuthorName() {
+  const user = getUser();
+
+  if (user && user.username) {
+    return user.username;
+  }
+
+  return 'Anonymous';
 }

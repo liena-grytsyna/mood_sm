@@ -6,41 +6,37 @@ import './HomePage.scss';
 
 function HomePage() {
   const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    const loadData = async () => {
+    async function loadPosts() {
       try {
-        setLoading(true);
-        const postsRes = await api.get('/posts');
-        setPosts(postsRes.data.posts || []);
+        const res = await api.get('/posts');
+        setPosts(res.data.posts || []);
       } catch {
-        setError('Failed to load feed');
-      } finally {
-        setLoading(false);
+        setError('Failed to load posts');
       }
-    };
+    }
 
-    loadData();
+    loadPosts();
   }, []);
 
-  const reactToPost = async (postId, emoji) => {
+  async function reactToPost(postId, emoji) {
     try {
-      setError('');
       const actorId = getActorId();
 
-      const response = await api.post(`/posts/${postId}/reactions`, { emoji, actorId });
-      // Optimized: Update local state instead of refetching all posts
-      setPosts((currentPosts) => currentPosts.map(
-        (post) => (post.id === postId ? response.data.post : post),
-      ));
+      const res = await api.post(`/posts/${postId}/reactions`, {
+        emoji,
+        actorId,
+      });
+
+      setPosts((posts) =>
+        posts.map((p) => (p.id === postId ? res.data.post : p))
+      );
     } catch (err) {
       setError(err?.response?.data?.error || 'Reaction error');
     }
-  };
-
-  if (loading) return <p>Loading feed...</p>;
+  }
 
   return (
     <div className="home-page">
@@ -54,6 +50,7 @@ function HomePage() {
 
       <section className="home-page__panel panel-card">
         <h2 className="home-page__title">All posts ({posts.length})</h2>
+        
         {posts.length === 0 ? (
           <p className="home-page__empty empty-panel">No posts yet</p>
         ) : (

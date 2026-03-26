@@ -3,11 +3,6 @@
 @use './styles/containers.scss' as *;
 @use './styles/forms.scss' as *;
 
-:root {
-  --surface-border: rgba(255, 255, 255, 0.74);
-  --hero-wash: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(250, 244, 236, 0.92));
-}
-
 * {
   margin: 0;
   padding: 0;
@@ -20,7 +15,7 @@ html {
 
 body {
   font-family: $font-family;
-  background: $light-gradient;
+  background: $bg-primary;
   color: $text-primary;
   line-height: 1.6;
   min-height: 100vh;
@@ -59,5 +54,5 @@ h6 {
 
 p {
   color: $text-secondary;
-  line-height: 1.75;
+  line-height: 1.7;
 }

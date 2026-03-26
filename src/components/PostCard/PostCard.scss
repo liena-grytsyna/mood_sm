@@ -117,10 +117,6 @@
     background: rgba(239, 124, 83, 0.1);
   }
 
-  &__pill--intensity {
-    background: rgba(94, 175, 220, 0.12);
-  }
-
   &__actions {
     display: flex;
     gap: $spacing-sm;
@@ -145,7 +141,7 @@
       box-shadow $transition-base;
 
     &:hover {
-      background: $secondary-gradient;
+      background: $secondary-color;
       color: #fffaf4;
       border-color: transparent;
       box-shadow: $shadow-sm;

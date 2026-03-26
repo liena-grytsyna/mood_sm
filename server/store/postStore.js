@@ -1,247 +1,202 @@
 import { db, sqliteEnabled } from '../db.js';
-import { createId, normalizeText, parseStoredJson, sortByNewest } from './storeUtils.js';
+import { createId, normalizeText, parseStoredJson, } from './storeUtils.js';
 
-// In-memory store for posts (used if SQLite is not enabled)
-const posts = [];
+// storage for posts if sqlite is not avaible.
+const posts = []; 
+
+// posible moods for posts
 const moods = ['happy', 'sad', 'angry', 'calm', 'excited', 'anxious', 'neutral'];
-const moodSet = new Set(moods);
-const POST_FIELDS = 'id, author, text, mood, intensity, reactions, reacted_users, created_at';
 
-// Helper functions for normalizing and mapping data
-function normalizeMood(value) {
-  return moodSet.has(value) ? value : 'neutral';
-}
-
-// Clamp intensity to [0, 1], treating non-numeric values as 0.5
-function normalizeIntensity(value) {
-  const numeric = Number(value);
-
-  if (Number.isNaN(numeric)) {
-    return 0.5;
+//normalize mood value.
+function normalizeMood(mood) {
+  if (moods.includes(mood)) {
+    return mood;
   }
-
-  return Math.max(0, Math.min(1, numeric));
+  return 'neutral';
 }
 
-// Map a database row to a post object, with normalization and JSON parsing
-function mapRowToPost(row) {
-  if (!row) {
-    return null;
-  }
-
-  return {
-    id: row.id,
-    author: row.author,
-    text: row.text,
-    mood: normalizeMood(row.mood),
-    intensity: normalizeIntensity(row.intensity),
-    reactions: parseStoredJson(row.reactions, {}),
-    reactedUsers: parseStoredJson(row.reacted_users, []),
-    createdAt: row.created_at,
-  };
-}
-
-// Create a new post record with normalized fields and default values
-function createPostRecord({ author, text, mood, intensity }) {
+// create a new post object
+function createPost(author, text, mood) {
   return {
     id: createId('p'),
     author: normalizeText(author) || 'Anonymous',
     text: normalizeText(text),
     mood: normalizeMood(mood),
-    intensity: normalizeIntensity(intensity),
     reactions: {},
     reactedUsers: [],
     createdAt: new Date().toISOString(),
   };
 }
 
-// Build SQL query components based on filter options for mood and author
-function buildPostQuery({ mood, author, newestFirst = false } = {}) {
-  const clauses = [];
-  const params = [];
-
-  if (mood && mood !== 'all') {
-    clauses.push('mood = ?');
-    params.push(mood);
+//form a post object from a database row
+function mapRowToPost(row) {
+  if (!row) {
+    return null;
   }
-
-  if (author) {
-    clauses.push('author = ?');
-    params.push(author);
-  }
-
   return {
-    params,
-    whereClause: clauses.length ? `WHERE ${clauses.join(' AND ')}` : '',
-    orderClause: newestFirst ? 'ORDER BY created_at DESC' : '',
+    id: row.id,
+    author: row.author,
+    text: row.text,
+    mood: normalizeMood(row.mood),
+    reactions: parseStoredJson(row.reactions, {}),
+    reactedUsers: parseStoredJson(row.reacted_users, []),
+    createdAt: row.created_at,
   };
 }
 
-// Retrieve posts from the database or in-memory store based on filter options
-function getPosts(options = {}) {
+//get all posts
+function getAllPosts() {
   if (sqliteEnabled) {
-    const { whereClause, orderClause, params } = buildPostQuery(options);
-    const rows = db.prepare(`
-      SELECT ${POST_FIELDS}
-      FROM posts
-      ${whereClause}
-      ${orderClause}
-    `).all(...params);
-
+    const rows = db
+    .prepare('SELECT * FROM posts ORDER BY created_at DESC')
+    .all();
     return rows.map(mapRowToPost);
   }
-
-  const filtered = posts.filter((post) => {
-    const moodMatches = !options.mood || options.mood === 'all' || post.mood === options.mood;
-    const authorMatches = !options.author || post.author === options.author;
-    return moodMatches && authorMatches;
-  });
-
-  return options.newestFirst ? sortByNewest(filtered, 'createdAt') : filtered;
 }
 
-// Retrieve a single post by ID from the database or in-memory store
+// get a single post by id
 function getPostById(postId) {
   if (sqliteEnabled) {
-    const row = db.prepare(`
-      SELECT ${POST_FIELDS}
-      FROM posts
-      WHERE id = ?
-    `).get(postId);
-
+    const row = db.prepare('SELECT * FROM posts WHERE id = ?').get(postId);
     return mapRowToPost(row);
   }
 
-  return posts.find((post) => post.id === postId) || null;
+  for (let post of posts) {
+    if (post.id === postId) {
+      return post;
+    }
+  }
+
+  return null;
 }
 
-// Save a new post to the database or in-memory store, returning the saved post
-function savePost(post) {
+// add post
+function addPost(post) {
   if (sqliteEnabled) {
     db.prepare(`
-      INSERT INTO posts (id, author, text, mood, intensity, reactions, reacted_users, created_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO posts (id, author, text, mood, reactions, reacted_users, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
     `).run(
       post.id,
       post.author,
       post.text,
       post.mood,
-      post.intensity,
       JSON.stringify(post.reactions),
       JSON.stringify(post.reactedUsers),
-      post.createdAt,
+      post.createdAt
     );
-
-    return post;
+  } else {
+    posts.push(post);
   }
 
-  posts.push(post);
   return post;
 }
 
-// Update the reactions and reacted users for a post in the database
-function savePostReactionState(post) {
-  if (!sqliteEnabled) {
-    return;
+// update reactions for post
+function updateReaction(post) {
+  if (sqliteEnabled) {
+    db.prepare(`
+      UPDATE posts
+      SET reactions = ?, reacted_users = ?
+      WHERE id = ?
+    `).run(
+      JSON.stringify(post.reactions),
+      JSON.stringify(post.reactedUsers),
+      post.id
+    );
   }
-
-  db.prepare(`
-    UPDATE posts
-    SET reactions = ?, reacted_users = ?
-    WHERE id = ?
-  `).run(
-    JSON.stringify(post.reactions),
-    JSON.stringify(post.reactedUsers),
-    post.id,
-  );
 }
 
-// Toggle a reaction for a post by a specific user, returning whether the reaction was added or removed
-function toggleReaction(post, emoji, actorId) {
-  const alreadyReacted = post.reactedUsers.includes(actorId);
-
-  if (alreadyReacted) {
+// reaction logic for posts
+function reactToPost(post, emoji, actorId) {
+  // if user reacted -> remove reaction, else add reaction
+  if (post.reactedUsers.includes(actorId)) {
     post.reactedUsers = post.reactedUsers.filter((id) => id !== actorId);
     post.reactions[emoji] = Math.max(0, (post.reactions[emoji] || 0) - 1);
     return false;
+  } else {
+    post.reactedUsers.push(actorId);
+    post.reactions[emoji] = (post.reactions[emoji] || 0) + 1;
+    return true;
   }
-
-  post.reactions[emoji] = (post.reactions[emoji] || 0) + 1;
-  post.reactedUsers.push(actorId);
-  return true;
 }
 
-// Compute statistics about posts, including total count, dominant mood, average intensity, and mood distribution
-function computeStats(items) {
-  if (!items.length) {
-    return {
-      totalPosts: 0,
-      dominantMood: 'neutral',
-      averageIntensity: 0,
-      distribution: moods.map((mood) => ({ mood, count: 0, percentage: 0 })),
-    };
-  }
-
-  const counts = Object.fromEntries(moods.map((mood) => [mood, 0]));
-  let intensitySum = 0;
-
-  for (const post of items) {
+// get staistics for posts
+function getStats(filterAuthor) {
+  const items = getAllPosts(null, filterAuthor);
+// count moods
+  const counts = {
+    happy: 0,
+    sad: 0,
+    angry: 0,
+    calm: 0,
+    excited: 0,
+    anxious: 0,
+    neutral: 0,
+  };
+// count every mood in posts
+  for (let post of items) {
     const mood = normalizeMood(post.mood);
-    counts[mood] += 1;
-    intensitySum += Number(post.intensity || 0);
+    counts[mood]++;
   }
-
+// find dominant mood
   let dominantMood = 'neutral';
 
-  for (const mood of moods) {
+  for (let mood of moods) {
     if (counts[mood] > counts[dominantMood]) {
       dominantMood = mood;
     }
   }
+// create distribution array for response
+  const distribution = moods.map((mood) => {
+    let percentage = 0;
+
+    if (items.length > 0) {
+      percentage = Number(((counts[mood] / items.length) * 100).toFixed(1));
+    }
+
+    return {
+      mood,
+      count: counts[mood],
+      percentage,
+    };
+  });
 
   return {
     totalPosts: items.length,
     dominantMood,
-    averageIntensity: Number((intensitySum / items.length).toFixed(2)),
-    distribution: moods.map((mood) => ({
-      mood,
-      count: counts[mood],
-      percentage: Number(((counts[mood] / items.length) * 100).toFixed(1)),
-    })),
+    distribution,
   };
 }
 
+// export posts
 export const postStore = {
-  list(filterMood, filterAuthor) {
-    return getPosts({
-      mood: filterMood,
-      author: filterAuthor,
-      newestFirst: true,
-    });
+  list() {
+    return getAllPosts();
   },
-
-  add({ author, text, mood, intensity }) {
-    const post = createPostRecord({ author, text, mood, intensity });
-    return savePost(post);
+// add new post
+  add({ author, text, mood }) {
+    const post = createPost(author, text, mood);
+    return addPost(post);
   },
-
+// add or remove reaction for post
   react(postId, emoji, actorId) {
     if (!actorId) {
       return { error: 'actor-required' };
     }
 
     const post = getPostById(postId);
+
     if (!post) {
       return { error: 'not-found' };
     }
 
-    const liked = toggleReaction(post, emoji, actorId);
-    savePostReactionState(post);
+    const liked = reactToPost(post, emoji, actorId);
+    updateReaction(post);
 
     return { post, liked };
   },
-
-  stats(filterAuthor) {
-    return computeStats(getPosts({ author: filterAuthor }));
+  stats() {
+    return getStats();
   },
 };

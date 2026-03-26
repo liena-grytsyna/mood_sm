@@ -1,34 +1,34 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, NavLink, Navigate } from 'react-router-dom';
+
 import HomePage from './pages/HomePage/HomePage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import LoginPage from './pages/LoginPage/LoginPage';
 import RegisterPage from './pages/RegisterPage/RegisterPage';
 import PostPage from './pages/PostPage/PostPage';
-import { clearUser, getCurrentUser, subscribeToUserChanges } from './lib/user';
 
-function ProtectedRoute({ children, authed }) {
-  if (!authed) {
-    return <Navigate to="/login" replace />;
+import { clearUser, getCurrentUser } from './lib/user';
+
+function getNavLinkClass({ isActive }) {
+  if (isActive) {
+    return 'site-nav__link site-nav__link--active';
   }
 
-  return children;
-}
-
-function GuestRoute({ children, authed }) {
-  if (authed) {
-    return <Navigate to="/profile" replace />;
-  }
-
-  return children;
+  return 'site-nav__link';
 }
 
 function App() {
-  const [currentUser, setCurrentUser] = useState(() => getCurrentUser());
+  const [user, setUser] = useState(getCurrentUser());
+  const authed = user && user.id;
 
-  useEffect(() => subscribeToUserChanges(() => setCurrentUser(getCurrentUser())), []);
+  function handleAuth(nextUser) {
+    setUser(nextUser);
+  }
 
-  const authed = Boolean(currentUser.id && currentUser.email && currentUser.username);
+  function logout() {
+    clearUser();
+    setUser(null);
+  }
 
   return (
     <Router>
@@ -36,43 +36,33 @@ function App() {
         <NavLink to="/" className="site-nav__brand">
           Mood Space
         </NavLink>
+
         <div className="site-nav__links">
-          <NavLink
-            to="/"
-            className={({ isActive }) => `site-nav__link${isActive ? ' site-nav__link--active' : ''}`}
-          >
+          <NavLink to="/" className={getNavLinkClass}>
             Home
           </NavLink>
+
           {authed ? (
             <>
-              <NavLink
-                to="/profile"
-                className={({ isActive }) => `site-nav__link${isActive ? ' site-nav__link--active' : ''}`}
-              >
+              <NavLink to="/profile" className={getNavLinkClass}>
                 Profile
               </NavLink>
-              <NavLink
-                to="/post"
-                className={({ isActive }) => `site-nav__link${isActive ? ' site-nav__link--active' : ''}`}
-              >
+
+              <NavLink to="/post" className={getNavLinkClass}>
                 New Post
               </NavLink>
-              <button type="button" className="site-nav__logout" onClick={clearUser}>
+
+              <button type="button" className="site-nav__logout" onClick={logout}>
                 Logout
               </button>
             </>
           ) : (
             <>
-              <NavLink
-                to="/login"
-                className={({ isActive }) => `site-nav__link${isActive ? ' site-nav__link--active' : ''}`}
-              >
+              <NavLink to="/login" className={getNavLinkClass}>
                 Login
               </NavLink>
-              <NavLink
-                to="/register"
-                className={({ isActive }) => `site-nav__link${isActive ? ' site-nav__link--active' : ''}`}
-              >
+
+              <NavLink to="/register" className={getNavLinkClass}>
                 Register
               </NavLink>
             </>
@@ -82,37 +72,27 @@ function App() {
 
       <Routes>
         <Route path="/" element={<HomePage />} />
+
         <Route
           path="/profile"
-          element={(
-            <ProtectedRoute authed={authed}>
-              <ProfilePage />
-            </ProtectedRoute>
-          )}
+          element={authed ? <ProfilePage /> : <Navigate to="/login" replace />}
         />
-        <Route
-          path="/login"
-          element={(
-            <GuestRoute authed={authed}>
-              <LoginPage />
-            </GuestRoute>
-          )}
-        />
-        <Route
-          path="/register"
-          element={(
-            <GuestRoute authed={authed}>
-              <RegisterPage />
-            </GuestRoute>
-          )}
-        />
+
         <Route
           path="/post"
-          element={(
-            <ProtectedRoute authed={authed}>
-              <PostPage />
-            </ProtectedRoute>
-          )}
+          element={authed ? <PostPage /> : <Navigate to="/login" replace />}
+        />
+
+        <Route
+          path="/login"
+          element={!authed ? <LoginPage onAuth={handleAuth} /> : <Navigate to="/profile" replace />}
+        />
+
+        <Route
+          path="/register"
+          element={
+            !authed ? <RegisterPage onAuth={handleAuth} /> : <Navigate to="/profile" replace />
+          }
         />
       </Routes>
     </Router>

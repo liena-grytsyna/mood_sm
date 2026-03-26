@@ -3,7 +3,7 @@
 
 .mood-stats {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: $spacing-lg;
 }
 
@@ -18,10 +18,6 @@
 
 .mood-stats__item--total {
   border-top: 3px solid rgba(244, 184, 92, 0.42);
-}
-
-.mood-stats__item--intensity {
-  border-top: 3px solid rgba(94, 175, 220, 0.42);
 }
 
 .mood-stats__item--dominant {
