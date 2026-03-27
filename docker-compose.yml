@@ -18,7 +18,7 @@ services:
     depends_on:
       - api
     ports:
-      - "${WEB_PORT:-8081}:80"
+      - "8081:80"
 
 volumes:
   mood_data:
