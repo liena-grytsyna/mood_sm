@@ -1,5 +1,5 @@
 import { db, sqliteEnabled } from '../db.js';
-import { createId, normalizeText, parseStoredJson, } from './storeUtils.js';
+import { createId, normalizeLower, normalizeText, parseStoredJson, sortByNewest } from './storeUtils.js';
 
 // storage for posts if sqlite is not avaible.
 const posts = []; 
@@ -45,13 +45,32 @@ function mapRowToPost(row) {
 }
 
 //get all posts
-function getAllPosts() {
+function getAllPosts(filterMood, filterAuthor) {
+  let items = [];
+
   if (sqliteEnabled) {
     const rows = db
-    .prepare('SELECT * FROM posts ORDER BY created_at DESC')
-    .all();
-    return rows.map(mapRowToPost);
+      .prepare('SELECT * FROM posts ORDER BY created_at DESC')
+      .all();
+    items = rows.map(mapRowToPost);
+  } else {
+    items = sortByNewest([...posts], 'createdAt');
   }
+
+  const mood = normalizeLower(filterMood);
+  const author = normalizeLower(filterAuthor);
+
+  return items.filter((post) => {
+    if (mood && normalizeLower(post.mood) !== mood) {
+      return false;
+    }
+
+    if (author && normalizeLower(post.author) !== author) {
+      return false;
+    }
+
+    return true;
+  });
 }
 
 // get a single post by id
@@ -171,8 +190,8 @@ function getStats(filterAuthor) {
 
 // export posts
 export const postStore = {
-  list() {
-    return getAllPosts();
+  list(mood, author) {
+    return getAllPosts(mood, author);
   },
 // add new post
   add({ author, text, mood }) {
@@ -196,7 +215,7 @@ export const postStore = {
 
     return { post, liked };
   },
-  stats() {
-    return getStats();
+  stats(author) {
+    return getStats(author);
   },
 };
