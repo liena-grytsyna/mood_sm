@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import MoodStats from '../../components/MoodStats/MoodStats';
 import PostCard from '../../components/PostCard/PostCard';
 import { api } from '../../lib/api';
 import { getAuthorName, getActorId } from '../../lib/user';
@@ -7,16 +6,13 @@ import './ProfilePage.scss';
 
 async function fetchProfileData(author) {
   const postsRes = await api.get('/posts', { params: { author } });
-  const statsRes = await api.get('/profile/stats', { params: { author } });
 
   return {
     posts: postsRes.data.posts || [],
-    stats: statsRes.data.stats || null,
   };
 }
 
 function ProfilePage() {
-  const [stats, setStats] = useState(null);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -31,7 +27,6 @@ function ProfilePage() {
         const data = await fetchProfileData(author);
 
         setPosts(data.posts);
-        setStats(data.stats);
       } catch {
         setError('Failed to load profile');
       } finally {
@@ -53,7 +48,6 @@ function ProfilePage() {
       const data = await fetchProfileData(author);
 
       setPosts(data.posts);
-      setStats(data.stats);
     } catch (err) {
       setError(err?.response?.data?.error || 'Reaction error');
     }
@@ -63,27 +57,24 @@ function ProfilePage() {
     return <p>Loading...</p>;
   }
 
+  if (error) {
+    return <p>{error}</p>;
+  }
+
   return (
-    <div className="profile-page">
-      <h1>My profile</h1>
-
-      {error && <p>{error}</p>}
-
-      <h2>Statistics</h2>
-      {stats ? <MoodStats stats={stats} /> : <p>No data</p>}
-
-      <h2>My posts ({posts.length})</h2>
+    <section className="profile-page__section panel-card">
+      <h2 className="profile-page__title">My posts ({posts.length})</h2>
 
       {posts.length === 0 ? (
-        <p>No posts yet</p>
+        <p className="profile-page__empty empty-panel">No posts yet</p>
       ) : (
-        <div>
+        <div className="profile-page__posts post-collection">
           {posts.map((post) => (
             <PostCard key={post.id} post={post} onReact={reactToPost} />
           ))}
         </div>
       )}
-    </div>
+    </section>
   );
 }
 

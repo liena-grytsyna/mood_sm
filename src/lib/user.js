@@ -48,11 +48,10 @@ export function getCurrentUser() {
 
   return user;
 }
-
 export function saveUser(user) {
   localStorage.setItem(USER_KEY, JSON.stringify(user));
 }
-
+// logout user by removing from local storage
 export function logout() {
   localStorage.removeItem(USER_KEY);
 }
@@ -60,7 +59,7 @@ export function logout() {
 export function clearUser() {
   localStorage.removeItem(USER_KEY);
 }
-
+// check if user is authenticated
 export function isAuth() {
   const user = getUser();
 

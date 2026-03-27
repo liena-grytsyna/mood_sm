@@ -6,8 +6,8 @@ services:
     environment:
       PORT: 4000
       PASSWORD_PEPPER: ${PASSWORD_PEPPER:-mood-space-dev-pepper}
-    ports:
-      - "4000:4000"
+    expose:
+      - "4000"
     volumes:
       - mood_data:/app/server/data
 
@@ -18,7 +18,7 @@ services:
     depends_on:
       - api
     ports:
-      - "5173:5173"
+      - "${WEB_PORT:-80}:80"
 
 volumes:
   mood_data:
