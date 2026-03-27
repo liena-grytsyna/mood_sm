@@ -1,0 +1,161 @@
+@use './variables.scss' as *;
+
+.form-card {
+  width: min(100%, $form-max-width);
+  max-width: $form-max-width;
+  margin: 0 auto;
+  padding: clamp(28px, 4vw, 40px);
+  background: $surface-bg;
+  border-radius: $border-radius-xl;
+  box-shadow: $shadow-lg;
+  border: 1px solid $surface-border;
+}
+
+.form-card--wide {
+  width: 100%;
+  max-width: none;
+}
+
+.form-card__kicker {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: $spacing-md;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: $surface-muted;
+  color: $secondary-color;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.form-card__title {
+  font-family: $font-family-display;
+  font-size: clamp(2.2rem, 5vw, 3rem);
+  letter-spacing: -0.05em;
+  margin-bottom: $spacing-sm;
+  line-height: 0.98;
+  color: $secondary-color;
+}
+
+.form-card__text {
+  margin-bottom: $spacing-xl;
+  max-width: 42ch;
+}
+
+.form-card__form {
+  display: grid;
+  gap: $spacing-lg;
+}
+
+.form-card__field {
+  display: grid;
+  gap: $spacing-sm;
+}
+
+.form-card__label {
+  display: block;
+  font-weight: $font-weight-medium;
+  color: $secondary-color;
+  font-size: $font-size-xs;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.form-card__control {
+  width: 100%;
+  padding: 16px 18px;
+  font-family: $font-family;
+  border: 1px solid rgba(23, 48, 74, 0.12);
+  border-radius: $border-radius;
+  font-size: $font-size-base;
+  line-height: 1.5;
+  background: #fff;
+  color: $text-primary;
+  transition:
+    border-color $transition-base,
+    box-shadow $transition-base,
+    background-color $transition-base;
+
+  &:focus {
+    outline: none;
+    background: $bg-primary;
+    border-color: $primary-color;
+    box-shadow: 0 0 0 4px rgba(239, 124, 83, 0.12);
+  }
+
+  &[type='email'],
+  &[type='password'],
+  &[type='text'] {
+    height: $input-height;
+  }
+
+  &::placeholder {
+    color: $text-muted;
+  }
+}
+
+.form-card__control--textarea {
+  min-height: 180px;
+  resize: vertical;
+}
+
+.form-card__status {
+  margin-bottom: $spacing-md;
+  padding: $spacing-md;
+  border-radius: $border-radius;
+  font-weight: $font-weight-medium;
+}
+
+.form-card__status--error {
+  background: rgba(194, 71, 51, 0.1);
+  border: 1px solid rgba(194, 71, 51, 0.18);
+  color: $error-color;
+}
+
+.form-card__status--success {
+  background: rgba(31, 138, 109, 0.1);
+  border: 1px solid rgba(31, 138, 109, 0.18);
+  color: $success-color;
+}
+
+.form-card__counter {
+  color: $text-muted;
+  font-size: $font-size-sm;
+  text-align: right;
+  font-weight: $font-weight-medium;
+}
+
+.form-card__submit {
+  width: 100%;
+  padding: $spacing-md;
+  background: $primary-color;
+  color: #fffaf4;
+  border: none;
+  border-radius: $border-radius;
+  cursor: pointer;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  transition:
+    transform $transition-base,
+    box-shadow $transition-base,
+    opacity $transition-base;
+  box-shadow: $shadow-md;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: $shadow-sm;
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}

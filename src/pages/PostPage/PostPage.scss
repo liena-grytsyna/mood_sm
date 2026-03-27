@@ -1,0 +1,10 @@
+@use '../../styles/variables.scss' as *;
+@use '../../styles/forms.scss' as *;
+@use '../../styles/containers.scss' as *;
+
+.post-page {
+  @extend .page-layout;
+  display: grid;
+  gap: $spacing-xl;
+  max-width: $content-width-narrow;
+}

@@ -1,0 +1,12 @@
+@use '../../styles/variables.scss' as *;
+@use '../../styles/forms.scss' as *;
+@use '../../styles/containers.scss' as *;
+
+.register-page {
+  @extend .page-layout;
+}
+
+.register-page__card {
+  margin-top: $spacing-xl;
+  margin-bottom: $spacing-3xl;
+}
