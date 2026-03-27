@@ -31,7 +31,7 @@ app.post('/api/register', (req, res) => {
     });
   }
   // check password length to short
-  if (password.length < 8) {
+  if (password.length < 6) {
     return res.status(400).json({
       error: 'Password must be at least 6 characters.'
     });
@@ -46,12 +46,6 @@ app.post('/api/register', (req, res) => {
   if (username.includes(' ') || email.includes(' ') || password.includes(' ')) {
     return res.status(400).json({
       error: 'Password must not contain spaces.'
-    });
-  }
-  // check username length to short
-  if (username.length < 1) {
-    return res.status(400).json({
-      error: 'Username must be at least 1 character.'
     });
   }
   // check username length to long
